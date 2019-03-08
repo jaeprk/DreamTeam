@@ -1,3 +1,4 @@
+package GameEnvironment;
 import java.util.HashMap;
 
 public abstract class Board {

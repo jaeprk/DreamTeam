@@ -1,3 +1,4 @@
+package GameEnvironment;
 import javax.swing.JLabel;
 
 public abstract class Piece {

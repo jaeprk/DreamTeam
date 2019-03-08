@@ -1,3 +1,4 @@
+package GameEnvironment;
 
 public interface GameFactory {
 

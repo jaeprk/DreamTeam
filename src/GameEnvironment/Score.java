@@ -1,3 +1,4 @@
+package GameEnvironment;
 
 public abstract class Score {
 

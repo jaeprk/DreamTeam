@@ -1,4 +1,4 @@
-package TicTacToe;
+package GameEnvironment.Game.TicTacToe;
 
 import java.util.HashMap;
 

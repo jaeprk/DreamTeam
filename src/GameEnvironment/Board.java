@@ -1,39 +1,123 @@
 package GameEnvironment;
 import java.util.HashMap;
 
+/* Abstract Board.java class for: 
+ *   - Creating a board object
+ *   - Hold a matrix of the pieces on the board
+ *   - Hold the starting board state
+ *   - Determine if move is valid
+ *   - Store next available moves
+ *   - End game state
+ */
 public abstract class Board {
-
-	private int rows;
-	private int cols;
-	protected Piece[][] gridPieces;
-	final private String[] pattern = {"checkered", "line", "blank"}; // appearance of the board; like a checker
-	final private String[] boardInteraction = {"board", "piece"}; // how user are interacting with the pieces
+	private int rows; //Number of rows for the board 
+	private int cols; //Number of cols for the board
+	private Piece[][] gridPieces; //Matrix for the pieces
+	private Piece currentPiece; //Single instance of a piece
+	private Interaction interaction; //Board interaction
+	static int maxPlayer; //Max number of players
+	protected int currentPlayer; //Current player number
 	
-	
-	public Board(int iRows, int iCols) {
-		this.rows = iRows;
-		this.cols = iCols;
-		this.gridPieces = new Piece[rows][cols];
+	/* User must supply the size of the board, maximum number of player, pattern and interaction of board
+	 * Rows and cols used to instantiate gridPieces;
+	 */
+	protected Board(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece) {
+		this.rows = rows;
+		this.cols = cols;
+		this.interaction = interaction;
+		Board.maxPlayer = maxPlayer;
+		this.currentPiece = currentPiece;
+		this.gridPieces = new Piece[this.rows][this.cols];
 	}
 	
-	public abstract boolean startBoard(Piece[][] iGridPieces, String x, String y); 
+	/* Set currentPlayer to the starting player number; should correspond with the Piece object
+	 * Add all starting Pieces to gridPieces; if there are no starting pieces, do not do this part
+	 */
+	public abstract void startGame(); 
 	
-	public abstract HashMap<Integer, Integer> validMove(); // define valid moves coordinates on board, if all cells are valid return null 
+	/* Loop through gridPieces and determine if position clicked is a valid move
+	 * Call Piece move method to get current move and check with the gridPieces to determine if move is valid
+	 * @return if move is valid
+	 */
+	public abstract boolean validMove(int row, int col);
 	
+	/* Determine what are the available next move for the pieces
+	 * Call Piece move method to get current move and check with the gridPieces to determine if next move is available
+	 * if valid, call nextPlayer method;
+	 * @return a HashMap of all available next move; else return null;
+	 */
+	public abstract HashMap<Integer, Integer> nextMove(); 
+	
+	/* End game state, determine if the game is completed
+	 * Loop through the gridPieces to determine so
+	 * call calculateScore()
+	 * @return if game has ended
+	 */
 	public abstract boolean endGame();
 	
-	public abstract boolean updateBoard(int row, int col, Piece piece);
+	/* Add new pieces to gridPieces, if validMove function is true 
+	 */
+	public void updateGrid(int row, int col, Piece piece) {
+		this.gridPieces[row][col] = piece;
+	}	
 	
+	/* Calculate scores for the winner and loser
+	 * Add game score to savedScores HashMap, in Main.java using the playerOne and playerTwo String, in Main.java 
+	 */
+	protected abstract void calculateScore();
 	
+	/* Helper function to determine next player, cycle through all the players
+	 */	
+	protected void nextPlayer() {
+		if(++this.currentPlayer > Board.maxPlayer)
+			this.currentPlayer = 1;
+	}
+	
+	private void fillGrid() {
+		for (int row = 0; row < this.rows; ++row) 
+			for (int col = 0; col < this.cols; ++col) 
+				this.gridPieces[row][col] = null;
+	}
+	
+	/* Get row index
+	 * @return number of row in board
+	 */
 	public int getRows() {
 		return this.rows;
 	}
 	
+	/* Get cols index
+	 * @return number of cols in board
+	 */
 	public int getCols() {
 		return this.cols;
 	}	
 	
-	public Piece[][] getGrid() {
+	/* Get the gridPieces
+	 * @return gridPieces matrix
+	 */
+	public Piece[][] getGridPieces() {
 		return this.gridPieces;
+	}
+
+	/* Get board pattern
+	 * @return pattern of board
+	 */
+	public Interaction getInteraction() {
+		return this.interaction;
+	}
+	
+	/* Get index of current player
+	 * @return index of current player
+	 */
+	public int getCurrentPlayer() {
+		return this.currentPlayer;
+	}
+	
+	/* Get index of current piece
+	 * @return current piece
+	 */
+	public Piece getCurrentPiece() {
+		return this.currentPiece;
 	}
 }

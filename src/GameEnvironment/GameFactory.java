@@ -1,22 +1,20 @@
 package GameEnvironment;
 
+/* Interface GameFactory.java class for: 
+ *   - Factory for building game
+ *   - Create Board object
+ *   - Create Piece object
+ *   - Call GameGUI to make GUI
+ */
 public interface GameFactory {
-
-	public void playGame(int x, int y);
 	
-	public boolean buildGame();
+	/* Create the game
+	 * Call buildBoard(), call buildPieces()
+	 * Create the GUI: instantiate GameGUI(buildBoard())
+	 */
+	public void buildGame();
 	
-	public Board buildBoard();
+	Board buildBoard();
 	
-	public Piece[] buildPieces();
-	
-	public Player[] buildPlayers();
-	
-	public Score[] buildScore();
-	
-	public String getTitle();
-	
-	public int getFrameSize();
-	
-	public String getGameStatus();
+	Piece buildPieces();
 }

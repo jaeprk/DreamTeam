@@ -1,5 +1,10 @@
 ##$$Reversi
 @@!!Cesar@@!!23
+##$$Tester
+@@!!Thach@@!!20
+@@!!Buter@@!!20
+@@!!butterfly@@!!20
+@@!!shawm@@!!20
 ##$$TicTacToe
 @@!!Yaser@@!!14
 ##$$Checkers

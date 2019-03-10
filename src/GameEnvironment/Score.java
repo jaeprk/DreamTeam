@@ -5,5 +5,11 @@ public abstract class Score {
 	private int score;
 	
 	
-	public abstract void calculateScore();
+	public void setScore(int s) {
+		this.score = s;
+	}
+	
+	public int getScore() {
+		return this.score;
+	}
 }

@@ -15,6 +15,8 @@ public abstract class Board {
 	private Piece[][] gridPieces; //Matrix for the pieces
 	private Piece currentPiece; //Single instance of a piece
 	private Interaction interaction; //Board interaction
+	private Pattern pattern;
+	private String color;
 	static int maxPlayer; //Max number of players
 	protected int currentPlayer; //Current player number
 	
@@ -28,6 +30,12 @@ public abstract class Board {
 		this.maxPlayer = maxPlayer;
 		this.currentPiece = currentPiece;
 		this.gridPieces = new Piece[this.rows][this.cols];
+	}
+	
+	protected Board(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece, Pattern pattern, String color) {
+		this(rows, cols, maxPlayer, interaction, currentPiece);
+		this.pattern = pattern;
+		this.color = color;
 	}
 	
 	/* Set currentPlayer to the starting player number; should correspond with the Piece object
@@ -119,5 +127,19 @@ public abstract class Board {
 	 */
 	public Piece getCurrentPiece() {
 		return this.currentPiece;
+	}
+	
+	/* Get board pattern
+	 * @return current board pattern
+	 */
+	public Pattern getPattern() {
+		return this.pattern;
+	}
+	
+	/* Get name of board color
+	 * @return current piece
+	 */
+	public String getColor() {
+		return this.color;
 	}
 }

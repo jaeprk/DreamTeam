@@ -228,7 +228,7 @@ public final class Main {
 	public static void addScore(String game, String player, int score) {
 		// if player doesn't exist, add it to saved scores map
 		if(!Main.savedScores.get(game).containsKey(player)) {
-			Main.savedScores.get(game).put(player, score);
+			Main.savedScores.get(game).put(player, 0);
 		}
 		
 		// update score of existing players for chosen game

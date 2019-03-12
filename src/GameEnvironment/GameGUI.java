@@ -61,6 +61,7 @@ public final class GameGUI {
 	
 	private Board gameBoard;  //Current board game object	
 	private boolean invalidInput;  //Is input valid	
+	private boolean continueGame;  //Determine if GUI is continue prompt
 	
 	//------------global color scheme-----------------------------------------------------------------------------------------------------------------
 	Color dark_gray = Color.DARK_GRAY;
@@ -169,6 +170,7 @@ public final class GameGUI {
 	public GameGUI(String winner, String game){
 		System.out.println("Launching continue...");
 		this.maxComponents = 2;
+		this.continueGame = true;
 		
 		//Create JFrame and add close operation procedures
 		createFrame("Restart " + game + "?");
@@ -178,7 +180,7 @@ public final class GameGUI {
 		
 		checkContentPanel(
 			//TopPanel
-			addComponents(2, new JLabel("Continue playing " + game + "?", SwingConstants.CENTER)), 
+			addComponents(2, new JLabel("<html>Congratulation to winner: " + winner + "<br/>Continue playing " + game + "?</html>", SwingConstants.CENTER)), 
 			//MidPanel
 			addComponents(1, createButton(this.QUIT, game)),
 			//BotPanel
@@ -457,6 +459,7 @@ public final class GameGUI {
 		mouseListener();
 		return this.gamePanel;
 	}
+	
 	//--------------Button/Action Listener-----------------------------------------------------------------------------------------------
 	/* Action listener for when JButton is pressed
 	 * @param button to be added with listener
@@ -489,7 +492,10 @@ public final class GameGUI {
 							//Attempt to instantiate game object
 							//As long as the package and class (implemented GameFactory) is the same, a game object should be made
 							Class<?> gameClass = Class.forName("GameEnvironment.Game." + gameSelected.toString() + "." + gameSelected.toString());
-							gameClass.newInstance();					
+							gameClass.newInstance();	
+							
+							if (continueGame)
+								frame.dispose();
 						} 
 						
 						//Fail to create game object
@@ -537,7 +543,7 @@ public final class GameGUI {
 					//If game ended in a draw, close game JFrame and open continue prompt
 					else if (gameBoard.tiedGame()) {
 						frame.dispose();
-						new GameGUI(GameGUI.players[gameBoard.currentPlayer - 1], gameSelected);
+						new GameGUI("TIED GAME", gameSelected);
 					}
 					
 					//Else, game continues with next player

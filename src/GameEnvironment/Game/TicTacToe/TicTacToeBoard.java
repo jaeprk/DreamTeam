@@ -38,33 +38,29 @@ class TicTacToeBoard extends Board {
 		// wrap in try and catch to avoid exception of accessing null object (empty pieces)
 
 		boolean isWinner = false;
-
-		// check winning rows 
-		try {			
-			int j = 0;
-			for(int i = 0; i < 3; ++i) {
+		
+		// check winning rows and columns
+		int j = 0;
+		for(int i = 0; i < 3; ++i) {
+			try {
 				if(getGridPieces()[i][j].playerNumber() == getGridPieces()[i][j+1].playerNumber() 
 						&& getGridPieces()[i][j].playerNumber() == getGridPieces()[i][j+2].playerNumber()) {
 					isWinner = true;
 				}
+			} catch(Exception e) {
+				continue;
 			}
-		} catch(Exception e) {
-			//e.printStackTrace();
-		}
-
-		// check winning columns
-		try {
-			int j = 0;
-			for(int i = 0; i < 3; ++i) {
+		}		
+		for(int i = 0; i < 3; ++i) {
+			try {
 				if(getGridPieces()[j][i].playerNumber() == getGridPieces()[j+1][i].playerNumber() 
 						&& getGridPieces()[j][i].playerNumber() == getGridPieces()[j+2][i].playerNumber()) {
 					isWinner = true;
 				}
+			} catch(Exception e) {
+				continue;
 			}
-		} catch(Exception e) {
-			//e.printStackTrace();
 		}
-
 
 		// check winning diagonal
 		try {

@@ -1,15 +1,5 @@
 ##$$Reversi
 @@!!Cesar@@!!23
-##$$Tester
-@@!!Thach@@!!20
-@@!!Buter@@!!20
-@@!!butterfly@@!!20
-@@!!shawm@@!!20
 ##$$TicTacToe
-@@!!Yaser@@!!14
 ##$$Checkers
-@@!!Gil@@!!24
-@@!!Jae@@!!36
 ##$$Battleship
-@@!!Tam@@!!13
-@@!!Eric@@!!21

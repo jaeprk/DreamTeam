@@ -362,6 +362,13 @@ public final class GameGUI {
 						if ((row + col) % 2 == 0) 
 							g.fillRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
 						
+						//If input is invalid, color that cell red 
+						if (invalidInput && selectedRow == row && selectedCol == col) {
+							g.setColor(red);
+							g.fillRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
+							g.setColor(dark_gray);
+						}
+						
 						//If there is a piece in the game board, add the piece icon
 						if (gameBoard.getGridPieces()[row][col] != null) {
 							BufferedImage image = null;
@@ -381,18 +388,7 @@ public final class GameGUI {
 							}
 						}
 					}				
-				}
-				
-				//If input is invalid, color that cell red 
-				if (invalidInput) {
-					g.setColor(red);
-					g.fillRect(selectedCol * cellWidth, selectedRow * cellHeight, cellWidth, cellHeight);
-					try {
-						g.drawImage(ImageIO.read(new File(gameBoard.getGridPieces()[selectedRow][selectedCol].getIcons(gameGrid[selectedRow][selectedCol]))), selectedCol * cellWidth, selectedRow * cellHeight, cellWidth, cellHeight, null);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
+				}				
 			}
 		}; 
 		
@@ -443,6 +439,7 @@ public final class GameGUI {
 							try {
 								
 								//Attempt to instantiate game object
+								//As long as the package and class (implemented GameFactory) is the same, a game object should be made
 								Class gameClass = Class.forName("GameEnvironment.Game." + GameGUI.gameSelected + "." + GameGUI.gameSelected);
 								Object game = gameClass.newInstance();					
 							} 

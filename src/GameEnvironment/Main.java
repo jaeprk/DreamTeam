@@ -45,7 +45,7 @@ public final class Main {
 	 * Run the Game Launcher
 	 */
 	private static void start() {
-		String [] gameList = grabGameList();
+		String[] gameList = grabGameList();
 		
 		//If Game folder could not be found or is empty, print prompt and terminate program
 		if (gameList == null) {
@@ -119,7 +119,7 @@ public final class Main {
         }
         
         //Failed to read from SavedScores.txt file
-        catch (IOException ex) {
+        catch (IOException | NullPointerException e) {
             System.out.println("Failed to read player scores from SavedScores.txt file");
             return false;
         } finally {

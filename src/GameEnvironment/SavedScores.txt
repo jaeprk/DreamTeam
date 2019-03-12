@@ -1,5 +1,1 @@
-##$$Reversi
-@@!!Cesar@@!!23
 ##$$TicTacToe
-##$$Checkers
-##$$Battleship

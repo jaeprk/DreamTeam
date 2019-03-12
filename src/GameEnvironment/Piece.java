@@ -40,7 +40,7 @@ public abstract class Piece {
 	 * @return if player input is valid; else return 1
 	 */
 	private int validPlayer(int player) {
-		if (player > 0 && player < Board.maxPlayer)
+		if (player > 0 && player <= Board.maxPlayer)
 			return player;
 		return 1;	
 	}

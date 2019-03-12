@@ -73,12 +73,6 @@ public abstract class Board {
 			this.currentPlayer = 1;
 	}
 	
-	private void fillGrid() {
-		for (int row = 0; row < this.rows; ++row) 
-			for (int col = 0; col < this.cols; ++col) 
-				this.gridPieces[row][col] = null;
-	}
-	
 	/* Get row index
 	 * @return number of row in board
 	 */

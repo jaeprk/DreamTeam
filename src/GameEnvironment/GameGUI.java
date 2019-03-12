@@ -1,13 +1,16 @@
 package GameEnvironment;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -39,6 +42,7 @@ public final class GameGUI {
 	private final String STATUS = "Status: ";  //Status text beginning 
 	private String statusText;  //Text of current game status, used for statusLabel
 	private String[] gameList;   //List of games name
+	String gameSelected;  //Game selected
 	
 	private JFrame frame;   //JFrame being used	
 	private JPanel contentPanel, gamePanel;   //Primary content/background panel; panel to play game on
@@ -49,8 +53,7 @@ public final class GameGUI {
 	private JLabel statusLabel;  //Status label for the game
 	private JLabel[] player;   //Player label for the game
 	private final Dimension gameDimension = new Dimension (600, 600);  //Dimension of the game panel
-	
-	private int[][] gameGrid;  //Grid of game, alternative to gameBoard.getGridPieces()	
+
 	private final int MAX_X_COMPONENTS = 4;  //Maximum number of 
 	private final int MAX_HIGHEST_PLAYER = 10;  //Number of players to display for the game stats
 	private int gridy;  //Current y-axis of the grid, used for GridBagConstraints
@@ -85,7 +88,6 @@ public final class GameGUI {
 	
 	//------------static global variable, used by package---------------------------------------------------------------------------------------------
 	static JLabel[] highestScoreLabel;  //Label for highest scores per game
-	static String gameSelected;  //Game selected
 	
 	/* @constructor to create the Game Launcher
 	 * @param list of games found in the Game Folder
@@ -121,22 +123,22 @@ public final class GameGUI {
 	}
 	
 	/* @constructor to create games
-	 * @param game board
+	 * @param game board, name of game
 	 */
-	public GameGUI(Board board){
-		System.out.println("Launching game: " + GameGUI.gameSelected + "...");
+	public GameGUI(Board board, String gameName){
+		this.gameSelected = gameName;
+		System.out.println("Launching game: " + this.gameSelected + "...");
 		
 		//Grab game board and start it
 		this.gameBoard = board;
 		this.gameBoard.startGame();
 		
-		//Set up the gameGrid, player labels, and current status
-		gameGrid = new int[gameBoard.getRows()][gameBoard.getCols()];
-		player = new JLabel[this.gameBoard.maxPlayer];
+		//Set player labels and current status
+		player = new JLabel[Board.maxPlayer];
 		statusText = STATUS + "Currently Player " + this.gameBoard.currentPlayer + " turn";
 		
 		//Create JFrame and add close operation procedures
-		createFrame(GameGUI.gameSelected);
+		createFrame(this.gameSelected);
 		
 		//Create content/background panel, JLabel from savedScores HashMap
 		createContentPanel();		
@@ -149,6 +151,34 @@ public final class GameGUI {
 			addComponents(2, createGamePanel()),
 			//BotPanel
 			addComponents(1, this.statusLabel = new JLabel(statusText, SwingConstants.LEFT), this.quitButton = new JButton(this.QUIT)));
+		
+		//Add content panel to JFrame, resize JFrame and make it visible 
+		buttonListener();
+		this.frame.add(this.contentPanel);
+		this.frame.pack();
+		this.frame.setVisible(true);		
+	}
+	
+	
+	/* @constructor to continue game
+	 * @param name of winner and game
+	 */
+	public GameGUI(String winner, String game){
+		System.out.println("Launching continue...");
+		
+		//Create JFrame and add close operation procedures
+		createFrame("Restart " + game + "?");
+		
+		//Create content/background panel, JLabel from savedScores HashMap
+		createContentPanel();		
+		
+		checkContentPanel(
+			//TopPanel
+			addComponents(2, new JLabel("Continue playing " + game + "?", SwingConstants.CENTER)), 
+			//MidPanel
+			addComponents(1, new JButton("Continue?"), this.quitButton = new JButton(this.QUIT)),
+			//BotPanel
+			false);
 		
 		//Add content panel to JFrame, resize JFrame and make it visible 
 		buttonListener();
@@ -375,11 +405,11 @@ public final class GameGUI {
 							
 							try {
 								//Pull icon path from Piece object
-								image = ImageIO.read(new File(gameBoard.getGridPieces()[row][col].getIcons(gameGrid[row][col])));						
+								image = ImageIO.read(new File(gameBoard.getGridPieces()[row][col].getIcons(gameBoard.getGridPieces()[row][col].player)));						
 							} 
 							catch (IOException e) {
 								//Alternative image is used if not is found
-								try {image = ImageIO.read(new File(defaultIcon[gameGrid[row][col]]));}
+								try {image = ImageIO.read(new File(defaultIcon[gameBoard.getGridPieces()[row][col].player]));}
 								catch (IOException ex) {/*do nothing*/}
 							}
 							finally {
@@ -387,7 +417,16 @@ public final class GameGUI {
 								g.drawImage(image, col * cellWidth, row * cellHeight, cellWidth, cellHeight, null);
 							}
 						}
-					}				
+					}
+//					g.setColor(red);
+//					Graphics2D g2 = (Graphics2D) g;
+//					double thickness = 10;
+//					Stroke oldStroke = g2.getStroke();
+//					g2.setStroke(new BasicStroke((float) thickness));
+//					g2.drawRect(1 * cellWidth, 1 * cellHeight, cellWidth, cellHeight);
+//					g2.setStroke(oldStroke);
+//					g.setColor(dark_gray);
+//					
 				}				
 			}
 		}; 
@@ -435,18 +474,19 @@ public final class GameGUI {
 							Main.playerTwo = playerTwo.getText();
 							
 							//Get name of JButton
-							GameGUI.gameSelected = ((JButton) source.getSource()).getActionCommand();
+							gameSelected =((JButton) source.getSource()).getActionCommand();
+							
 							try {
 								
 								//Attempt to instantiate game object
 								//As long as the package and class (implemented GameFactory) is the same, a game object should be made
-								Class gameClass = Class.forName("GameEnvironment.Game." + GameGUI.gameSelected + "." + GameGUI.gameSelected);
-								Object game = gameClass.newInstance();					
+								Class gameClass = Class.forName("GameEnvironment.Game." + gameSelected.toString() + "." + gameSelected.toString());
+								gameClass.newInstance();					
 							} 
 							
 							//Fail to create game object
 							catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-								System.out.println(GameGUI.gameSelected + ".java and package could not be found!");							
+								System.out.println(gameSelected + ".java and package could not be found!");							
 							}
 						}
 						
@@ -463,7 +503,7 @@ public final class GameGUI {
 		}
 	}
 	
-	/* Add mouselistener to gamePanel
+	/* Add mouseListener to gamePanel
 	 */
 	private void mouseListener() {
 		this.gamePanel.addMouseListener(new MouseAdapter() {
@@ -477,9 +517,15 @@ public final class GameGUI {
 				//If move is valid, add piece to game board, increment to next player and change status
 				if (gameBoard.validMove(selectedRow, selectedCol)) {
 					invalidInput = false;
-					gameGrid[selectedRow][selectedCol] = gameBoard.currentPlayer - 1;
-					gameBoard.nextPlayer();
-					statusText = STATUS + "Currently Player " + gameBoard.currentPlayer + " turn";					
+					
+					if (gameBoard.endGame()) {
+						new GameGUI("Bob", gameSelected.toString());
+					}
+					
+					else {						
+						gameBoard.nextPlayer();
+						statusText = STATUS + "Currently Player " + gameBoard.currentPlayer + " turn";		
+					}
 				}	
 				
 				//Else mark is invalid and print status 

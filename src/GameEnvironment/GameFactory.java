@@ -12,9 +12,7 @@ public interface GameFactory {
 	 * Call buildBoard(), call buildPieces()
 	 * Create the GUI: instantiate GameGUI(buildBoard())
 	 */
-	public void buildGame();
-	
-	Board buildBoard();
-	
+	public void buildGame(String gameName);	
+	Board buildBoard();	
 	Piece buildPieces();
 }

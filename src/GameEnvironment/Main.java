@@ -104,7 +104,7 @@ public final class Main {
         	String[] parse;
         	
         	//While there is a next line, read it
-    		while ((line = reader.readLine()) != null) 
+    		while ((line = reader.readLine()) != null) {
     			
     			//If String contains ##$$, it is the game name, store it into game String
     			if (line.contains(GAME_REGEX))
@@ -113,13 +113,20 @@ public final class Main {
     			//If String contains @@!!, it is the player name and score, store it into savedScores HashMap
     			else if (line.contains(PLAYER_SCORE_REGEX)) {
     				parse = line.split(PLAYER_SCORE_REGEX, -2);
-    				Main.savedScores.get(game).put(parse[1], Integer.parseInt(parse[2]));
-    			}        				
-        		
+    				
+    				//Attempt to put saved scores into savedScores HashMap, continue if failed
+    				try {
+    					Main.savedScores.get(game).put(parse[1], Integer.parseInt(parse[2]));
+    				}
+    				catch (NullPointerException e){
+    					continue;
+    				}
+    			} 
+    		}
         }
         
         //Failed to read from SavedScores.txt file
-        catch (IOException | NullPointerException e) {
+        catch (IOException e) {
             System.out.println("Failed to read player scores from SavedScores.txt file");
             return false;
         } finally {

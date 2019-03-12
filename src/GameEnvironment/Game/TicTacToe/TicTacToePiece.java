@@ -19,7 +19,7 @@ public class TicTacToePiece extends Piece{
 
 	@Override
 	public String getIcons(int player) {
-		return pieceIcon[player];
+		return pieceIcon[player - 1];
 	}	
 }
 

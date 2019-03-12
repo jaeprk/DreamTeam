@@ -8,12 +8,12 @@ import GameEnvironment.Piece;
 
 public class TicTacToe implements GameFactory {
 	public TicTacToe() {
-		buildGame();	
+		buildGame("TicTacToe");	
 	}
 
 	@Override
-	public void buildGame() {
-		new GameGUI(buildBoard());		
+	public void buildGame(String gameName) {
+		new GameGUI(buildBoard(), gameName);		
 	}
 
 	@Override

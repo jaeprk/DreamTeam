@@ -21,8 +21,7 @@ class MemoryPiece extends Piece {
 
 	@Override
 	public String getIcons(int player) {
-		// TODO Auto-generated method stub
-		return null;
+		return pieceIcon[player - 1];
 	}
 
 }

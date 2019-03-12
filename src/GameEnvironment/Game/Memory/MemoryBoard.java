@@ -34,8 +34,14 @@ class MemoryBoard extends Board {
 
 	@Override
 	public boolean endGame() {
-		// TODO Auto-generated method stub
-		return false;
+		for(int i = 0; i < 8; ++i) {
+			for (int j = 0; j < 8; ++j) {
+				if(getGridPieces()[i][j] == null) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	@Override

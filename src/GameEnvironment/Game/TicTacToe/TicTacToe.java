@@ -18,7 +18,7 @@ public class TicTacToe implements GameFactory {
 
 	@Override
 	public Board buildBoard() {
-		return new TicTacToeBoard(4, 3, 2, Interaction.BOARD, buildPieces());
+		return new TicTacToeBoard(3, 3, 2, Interaction.BOARD, buildPieces());
 	}
 
 	@Override

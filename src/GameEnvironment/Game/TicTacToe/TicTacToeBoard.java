@@ -104,6 +104,18 @@ class TicTacToeBoard extends Board {
 	@Override
 	protected int calculateScore() {
 		return 1;
+	}
+	
+	/* Determine if game ended in a tie; no more empty cells
+	 * @return if game ended in a tie
+	 */
+	@Override
+	public boolean tiedGame() {
+		for (int row = 0; row < super.getRows(); ++row)
+			for (int col = 0; col < super.getCols(); ++col)
+				if (super.getGridPieces()[row][col] == null)
+					return false;
+		return true;
 	}	
 }
 

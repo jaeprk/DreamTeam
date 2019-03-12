@@ -1,4 +1,12 @@
+##$$Battleship
+##$$Checkers
 ##$$Memory
+##$$Reversi
 ##$$TicTacToe
-@@!!Thach@@!!2
-@@!!Yaser@@!!3
+@@!!asd@@!!17
+@@!!Thach@@!!5
+@@!!dsf@@!!4
+@@!!Yaser@@!!4
+@@!!ad@@!!3
+@@!!sds@@!!3
+@@!!sdf@@!!3

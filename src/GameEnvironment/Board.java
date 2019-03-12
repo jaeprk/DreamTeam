@@ -25,7 +25,7 @@ public abstract class Board {
 		this.rows = rows;
 		this.cols = cols;
 		this.interaction = interaction;
-		Board.maxPlayer = maxPlayer;
+		this.maxPlayer = maxPlayer;
 		this.currentPiece = currentPiece;
 		this.gridPieces = new Piece[this.rows][this.cols];
 	}
@@ -54,6 +54,12 @@ public abstract class Board {
 	 * @return if game has ended
 	 */
 	public abstract boolean endGame();
+	
+	/* Tied game state, determine if the game is completed and no winner
+	 * Loop through the gridPieces to determine so
+	 * @return if game has ended in a tie
+	 */
+	public abstract boolean tiedGame();
 	
 	/* Add new pieces to gridPieces, if validMove function is true 
 	 */

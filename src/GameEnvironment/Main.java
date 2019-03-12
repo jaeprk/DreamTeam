@@ -9,8 +9,13 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
+
+import static java.util.stream.Collectors.*;
 
 /* Main.java class for: 
  *   - Read list of games from Game folder
@@ -30,9 +35,7 @@ public final class Main {
 	
 	
 	//-------------------static variables, used by package---------------------------------------------------------------------------------------------------
-	protected static Map<String, HashMap<String, Integer>> savedScores; 
-	static String playerOne, playerTwo;
-	static String[] gamePlayers; // game players holders for score update
+	protected static Map<String, HashMap<String, Integer>> savedScores;
 	final static String GAME_ENVIR_DIRECTORY = System.getProperty("user.dir") + "/src/GameEnvironment/"; //directory of Main package, GameEnvironment
 	
 	public static void main(String[] args) {
@@ -47,7 +50,6 @@ public final class Main {
 	 */
 	private static void start() {
 		String[] gameList = grabGameList();
-		gamePlayers = new String[2];
 		
 		//If Game folder could not be found or is empty, print prompt and terminate program
 		if (gameList == null) {
@@ -56,13 +58,15 @@ public final class Main {
 		}
 		
 		//Store list of games into savedScores HashMap
-		Main.savedScores = new HashMap<String, HashMap<String, Integer>>();
+		Main.savedScores = new TreeMap<String, HashMap<String, Integer>>();
 		
-		for (String gameName: gameList)
-			Main.savedScores.put(gameName, new HashMap<String, Integer>());
+		for (String gameName: gameList) 
+			Main.savedScores.put(gameName, new HashMap<String, Integer>());		
 		
-		//Load saved game scores into savedScores HashMap and print it to prompt
+		//Load saved game scores into savedScores HashMap, sort it, and print it to prompt
 		loadGameScores();
+		for (String gameName: gameList) 
+			sortSavedScores(gameName);
 		printSavedScores();	
 		
 		//Instantiate game launcher
@@ -139,6 +143,21 @@ public final class Main {
         return true;
 	}
 	
+	/* Sort the savedScores HashMap, first by key alphabetically, then by the score of each player
+	 * @param name of game
+	 * Source: https://www.javacodegeeks.com/2017/09/java-8-sorting-hashmap-values-ascending-descending-order.html
+	 */
+	public static void sortSavedScores(String gameName) {
+		HashMap<String, Integer> sorted = Main.savedScores.get(gameName)
+		        .entrySet()
+		        .stream()
+		        .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+		        .collect(
+		            toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+		                LinkedHashMap::new));
+		Main.savedScores.put(gameName, sorted);
+	}
+	
 	//-----------------------end game, clean up any messes------------------------------------------------------------------------------------------------
 	
 	/* Terminate program
@@ -204,6 +223,7 @@ public final class Main {
 	/*
 	 * Helper function to update players' scores for each game
 	 * It is assumed that the player passed is the winning player: the last, current player when game ends
+	 * @param name of game, name of winning player, score adjustment
 	 */
 	public static void addScore(String game, String player, int score) {
 		// if player doesn't exist, add it to saved scores map
@@ -212,10 +232,9 @@ public final class Main {
 		}
 		
 		// update score of existing players for chosen game
-		Integer something = Main.savedScores.get(game).get(player);
-		Main.savedScores.get(game).put(player, something + score);
-	}
-	
+		Integer temp = Main.savedScores.get(game).get(player);
+		Main.savedScores.get(game).put(player, temp + score);
+	}	
 	
 	//-----------------------other helper function-------------------------------------------------------------------------------------------	
 	/* Helper function to print out savedScores HashMap; used for debugging purposes
@@ -237,28 +256,4 @@ public final class Main {
         	System.out.print("}\n");
         }
 	}
-//	public static void start() {
-//		
-//		/*
-//		 * here needs to go the initial environment frame where players sign in and choose a game
-//		 * it would probably go something like this:
-//		 * GameFactory[] games = { new TicTacToeGame(), new BattleShipGame(), new ReversiGame, new CheckersGame };
-//		 * 
-//		 * GUI gameFrame = new GUI();
-//		 * gameFrame.buildInitialFrame() --> this function needs to be defined and built
-//		 * 
-//		 * based on index chosen from menu of games on initial frame do:
-//		 * gameFrame.buildFrame(games[gameIndex]) --> this will start the chosen game by calling the game's constructor
-//		 * 
-//		 */
-//		
-//		TicTacToeGame tttGame = new TicTacToeGame();
-//		
-//		GUI gameFrame = new GUI();
-//		gameFrame.buildFrame(tttGame);
-//	}
-	
-	
-	
-
 }

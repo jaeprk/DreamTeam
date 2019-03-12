@@ -49,10 +49,12 @@ public final class GameGUI {
 	private GridBagConstraints gbc;  //Constraints used for the GridBagLayout
 	private JButton[] gameButton;   //List of game buttons	
 	private JButton quitButton;   //Quit button for game
-	private JTextField playerOne, playerTwo;  //Text field input for the two players
+	private JTextField[] enterPlayer;  //Text field input for the two players
 	private JLabel statusLabel;  //Status label for the game
 	private JLabel[] player;   //Player label for the game
 	private final Dimension gameDimension = new Dimension (600, 600);  //Dimension of the game panel
+	private final Dimension textDimension = new Dimension (125, 25);  //Default dimension of JTextField
+	private final Dimension buttonDimension = new Dimension (125, 30);   //Default dimension of JButton
 
 	private final int MAX_X_COMPONENTS = 4;  //Maximum number of 
 	private final int MAX_HIGHEST_PLAYER = 10;  //Number of players to display for the game stats
@@ -95,6 +97,7 @@ public final class GameGUI {
 	GameGUI(String[] gameList){
 		System.out.println("Loading Game Launcher...");
 		this.gameList = gameList;
+		this.enterPlayer = new JTextField[2];
 		
 		//Create JFrame and add close operation procedures
 		createFrame(this.GAME_LAUNCHER);
@@ -108,13 +111,16 @@ public final class GameGUI {
 		checkContentPanel(
 				//TopPanel
 				addComponents(1, new JLabel("Player One: ", SwingConstants.RIGHT), 
-						      this.playerOne = new JTextField(), 
+						      this.enterPlayer[0] = new JTextField(), 
 						      new JLabel("Player Two: ", SwingConstants.RIGHT), 
-						      this.playerTwo = new JTextField()), 
+						      this.enterPlayer[1] = new JTextField()), 
 				//MidPanel
 				addComponents(1, createButton(this.gameList)),
 				//BotPanel
 				addComponents(1, GameGUI.highestScoreLabel));
+		
+		this.enterPlayer[0].setPreferredSize(this.textDimension);
+		this.enterPlayer[1].setPreferredSize(this.textDimension);
 		
 		//Add content panel to JFrame, resize JFrame and make it visible 
 		this.frame.add(this.contentPanel);
@@ -290,7 +296,7 @@ public final class GameGUI {
 		//Loop through buttonLabels, create and add JButtons to jButtons array
 		for (int i = 0; i < sizeButton; ++i) { 
 			this.gameButton[i] = new JButton(buttonLabels[i]);
-			this.gameButton[i].setPreferredSize(new Dimension(100 , 30));		
+			this.gameButton[i].setPreferredSize(this.buttonDimension);		
 		}
 		
 		buttonListener();	
@@ -463,15 +469,15 @@ public final class GameGUI {
 					@Override
 					public void actionPerformed(ActionEvent source) {
 						//Make sure there is something entered in the player 1 and 2 JTextField
-						if (!playerOne.getText().isEmpty() && !playerTwo.getText().isEmpty()) {
+						if (!enterPlayer[0].getText().isEmpty() && !enterPlayer[1].getText().isEmpty()) {
 							
 							//Lock JTextField
-							playerOne.setEditable(false);
-							playerTwo.setEditable(false);
+							enterPlayer[2].setEditable(false);
+							enterPlayer[1].setEditable(false);
 							
 							//Set name of player 1 and 2
-							Main.playerOne = playerOne.getText();
-							Main.playerTwo = playerTwo.getText();
+							Main.playerOne = enterPlayer[0].getText();
+							Main.playerTwo = enterPlayer[1].getText();
 							
 							//Get name of JButton
 							gameSelected =((JButton) source.getSource()).getActionCommand();
@@ -550,8 +556,7 @@ public final class GameGUI {
 		this.contentPanel = null;
 		this.gbc = null;
 		this.gameButton = null;	
-		this.playerOne = null;
-		this.playerTwo = null;
+		this.enterPlayer = null;
 	}	
 	
 	/* Print out gridPieces from game board; used for debugging

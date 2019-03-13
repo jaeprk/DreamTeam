@@ -1,6 +1,7 @@
 package GameEnvironment;
 
 import java.awt.Point;
+import java.util.List;
 
 /* Abstract Piece.java class for: 
  *   - Creating individual game piece
@@ -20,7 +21,7 @@ public abstract class Piece {
 	/* What are the movement of the pieces
 	 * @return a HashMap of all available moves
 	 */
-	public abstract Point[] getMoves();
+	public abstract List<Point> getMoves();
 	
 	/* A list of string for the piece icons
 	 * @param the player number of which the piece belong to

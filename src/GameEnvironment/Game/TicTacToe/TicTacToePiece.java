@@ -1,6 +1,7 @@
 package GameEnvironment.Game.TicTacToe;
 
 import java.awt.Point;
+import java.util.List;
 
 import GameEnvironment.Piece;
 
@@ -22,7 +23,7 @@ public class TicTacToePiece extends Piece{
 	 * @return available moves; if Piece have no predetermined moves, return null
 	 */
 	@Override
-	public Point[] getMoves() {
+	public List<Point> getMoves() {
 		return null;
 	}
 	

@@ -1,21 +1,30 @@
 package GameEnvironment.Game.Reversi;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Point;
 
 import GameEnvironment.Board;
 import GameEnvironment.Interaction;
+import GameEnvironment.Pattern;
 import GameEnvironment.Piece;
 
 public class ReversiBoard extends Board{
 	
 	private List<Integer> direction;
-	Boolean lock;
+	private Boolean lock;
 
 	protected ReversiBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece) {
-		super(rows, cols, maxPlayer, interaction, currentPiece);
-		
+		super(rows, cols, maxPlayer, interaction, currentPiece);		
+	}
+	
+	/* Constructor for board with change in appearance
+	 * @param row, col, number of player, board interaction, TicTacToePIece, select board pattern, and board color
+	 */
+	protected ReversiBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece, Pattern pattern, Color color) {
+		super(rows, cols, maxPlayer, interaction, currentPiece, pattern, color);
 	}
 
 	@Override
@@ -32,7 +41,7 @@ public class ReversiBoard extends Board{
 	}
 
 	@Override
-	public boolean validMove(int row, int col) {
+	public boolean isMoveValid(int row, int col) {
 		if(getGridPieces()[row][col] != null)
 			return false;
 		
@@ -105,13 +114,13 @@ public class ReversiBoard extends Board{
 	}
 
 	@Override
-	public HashMap<Integer, Integer> nextMove() {
-		HashMap<Integer, Integer> allValidMoves = new HashMap<Integer, Integer>();
+	public List<Point> getAvailableMoves() {
+		List<Point> allValidMoves = new ArrayList<Point>();
 		for(int row = 0; row<8; row++){
 			for(int col = 0; col<8; col++){
 				if(super.getGridPieces()[row][col] == null){
-					if(validMove(row, col)){
-						allValidMoves.put(row, col);
+					if(isMoveValid(row, col)){
+						allValidMoves.add(new Point(row, col));
 					}
 				}
 			}
@@ -126,7 +135,8 @@ public class ReversiBoard extends Board{
 	}
 
 	@Override
-	protected void calculateScore() {
+	protected int calculateScore() {
+		return 1;
 		// TODO Auto-generated method stub
 		
 	}
@@ -397,5 +407,11 @@ public class ReversiBoard extends Board{
 	
 	private void resetLock(){
 		lock = false;
+	}
+
+	@Override
+	public boolean isGameTied() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

@@ -2,6 +2,7 @@ package GameEnvironment.Game.TicTacToe;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.List;
 
 import GameEnvironment.Board;
 import GameEnvironment.Interaction;
@@ -20,7 +21,7 @@ class TicTacToeBoard extends Board {
 	}
 	
 	/* Constructor for board with change in appearance
-	 * @param row, col, number of plauer, board interaction, TicTacToePIece, select board pattern, and board color
+	 * @param row, col, number of player, board interaction, TicTacToePIece, select board pattern, and board color
 	 */
 	protected TicTacToeBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece, Pattern pattern, Color color) {
 		super(rows, cols, maxPlayer, interaction, currentPiece, pattern, color);
@@ -53,7 +54,7 @@ class TicTacToeBoard extends Board {
 	 * @return HashMap of row and col coordinates; return null if all empty spaces are allow 
 	 */
 	@Override
-	public Point[] getAvailableMoves() {
+	public List<Point> getAvailableMoves() {
 		return null;
 	}
 	

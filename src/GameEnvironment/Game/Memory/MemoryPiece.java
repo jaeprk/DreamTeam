@@ -1,6 +1,7 @@
 package GameEnvironment.Game.Memory;
 
 import java.awt.Point;
+import java.util.List;
 
 import GameEnvironment.Piece;
 
@@ -14,7 +15,7 @@ class MemoryPiece extends Piece {
 	}
 
 	@Override
-	public Point[] getMoves() {
+	public List<Point> getMoves() {
 		// TODO Auto-generated method stub
 		return null;
 	}

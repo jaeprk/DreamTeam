@@ -1,6 +1,7 @@
 package GameEnvironment.Game.Memory;
 
 import java.awt.Point;
+import java.util.List;
 
 import GameEnvironment.Board;
 import GameEnvironment.Interaction;
@@ -45,7 +46,7 @@ class MemoryBoard extends Board {
 	}
 
 	@Override
-	public Point[] getAvailableMoves() {
+	public List<Point> getAvailableMoves() {
 		// TODO Auto-generated method stub
 		return null;
 	}

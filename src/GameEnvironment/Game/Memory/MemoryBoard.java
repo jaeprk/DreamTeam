@@ -1,6 +1,6 @@
 package GameEnvironment.Game.Memory;
 
-import java.util.HashMap;
+import java.awt.Point;
 
 import GameEnvironment.Board;
 import GameEnvironment.Interaction;
@@ -45,7 +45,7 @@ class MemoryBoard extends Board {
 	}
 
 	@Override
-	public HashMap<Integer, Integer> getAvailableMoves() {
+	public Point[] getAvailableMoves() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -1,7 +1,7 @@
 package GameEnvironment.Game.TicTacToe;
 
 import java.awt.Color;
-import java.util.HashMap;
+import java.awt.Point;
 
 import GameEnvironment.Board;
 import GameEnvironment.Interaction;
@@ -53,7 +53,7 @@ class TicTacToeBoard extends Board {
 	 * @return HashMap of row and col coordinates; return null if all empty spaces are allow 
 	 */
 	@Override
-	public HashMap<Integer, Integer> getAvailableMoves() {
+	public Point[] getAvailableMoves() {
 		return null;
 	}
 	

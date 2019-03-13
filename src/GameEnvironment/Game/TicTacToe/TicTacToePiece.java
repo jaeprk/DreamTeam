@@ -1,6 +1,6 @@
 package GameEnvironment.Game.TicTacToe;
 
-import java.util.HashMap;
+import java.awt.Point;
 
 import GameEnvironment.Piece;
 
@@ -22,7 +22,7 @@ public class TicTacToePiece extends Piece{
 	 * @return available moves; if Piece have no predetermined moves, return null
 	 */
 	@Override
-	public HashMap<Integer, Integer> getMoves() {
+	public Point[] getMoves() {
 		return null;
 	}
 	

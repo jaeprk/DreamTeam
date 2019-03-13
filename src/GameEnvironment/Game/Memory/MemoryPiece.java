@@ -1,6 +1,6 @@
 package GameEnvironment.Game.Memory;
 
-import java.util.HashMap;
+import java.awt.Point;
 
 import GameEnvironment.Piece;
 
@@ -14,7 +14,7 @@ class MemoryPiece extends Piece {
 	}
 
 	@Override
-	public HashMap<Integer, Integer> getMoves() {
+	public Point[] getMoves() {
 		// TODO Auto-generated method stub
 		return null;
 	}

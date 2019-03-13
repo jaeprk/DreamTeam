@@ -1,6 +1,7 @@
 package GameEnvironment;
+
 import java.awt.Color;
-import java.util.HashMap;
+import java.awt.Point;
 
 /* Abstract Board.java class for: 
  *   - Creating a board object
@@ -57,7 +58,7 @@ public abstract class Board {
 	 * if valid, call nextPlayer method;
 	 * @return a HashMap of all available next move; else return null;
 	 */
-	public abstract HashMap<Integer, Integer> getAvailableMoves(); 
+	public abstract Point[] getAvailableMoves(); 
 	
 	/* End game state, determine if the game is completed
 	 * Loop through the gridPieces to determine so

@@ -14,7 +14,7 @@ class MemoryPiece extends Piece {
 	}
 
 	@Override
-	public HashMap<Integer, Integer> move() {
+	public HashMap<Integer, Integer> getMoves() {
 		// TODO Auto-generated method stub
 		return null;
 	}

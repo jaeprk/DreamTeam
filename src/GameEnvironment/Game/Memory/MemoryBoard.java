@@ -17,20 +17,6 @@ class MemoryBoard extends Board {
 		super.currentPlayer = 1;
 	}
 
-	@Override
-	public boolean validMove(int row, int col) {
-		if (super.getGridPieces()[row][col] == null) {
-			super.updateGrid(row, col, new MemoryPiece("", super.currentPlayer));			
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public HashMap<Integer, Integer> nextMove() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public boolean endGame() {
@@ -51,8 +37,21 @@ class MemoryBoard extends Board {
 		
 	}
 
+
 	@Override
-	public boolean tiedGame() {
+	public boolean isMoveValid(int row, int col) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public HashMap<Integer, Integer> getAvailableMoves() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isGameTied() {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -14,7 +14,7 @@ public abstract class Board {
 	private int rows; //Number of rows for the board 
 	private int cols; //Number of cols for the board
 	private Piece[][] gridPieces; //Matrix for the pieces
-	private Piece currentPiece; //Single instance of a piece
+	protected Piece currentPiece; //Single instance of a piece
 	private Interaction interaction; //Board interaction
 	private Pattern pattern;
 	private Color color;
@@ -50,14 +50,14 @@ public abstract class Board {
 	 * Call Piece move method to get current move and check with the gridPieces to determine if move is valid
 	 * @return if move is valid
 	 */
-	public abstract boolean validMove(int row, int col);
+	public abstract boolean isMoveValid(int row, int col);
 	
 	/* Determine what are the available next move for the pieces
 	 * Call Piece move method to get current move and check with the gridPieces to determine if next move is available
 	 * if valid, call nextPlayer method;
 	 * @return a HashMap of all available next move; else return null;
 	 */
-	public abstract HashMap<Integer, Integer> nextMove(); 
+	public abstract HashMap<Integer, Integer> getAvailableMoves(); 
 	
 	/* End game state, determine if the game is completed
 	 * Loop through the gridPieces to determine so
@@ -70,7 +70,7 @@ public abstract class Board {
 	 * Loop through the gridPieces to determine so
 	 * @return if game has ended in a tie
 	 */
-	public abstract boolean tiedGame();
+	public abstract boolean isGameTied();
 	
 	/* Add new pieces to gridPieces, if validMove function is true 
 	 */

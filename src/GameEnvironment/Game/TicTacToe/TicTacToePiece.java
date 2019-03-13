@@ -22,7 +22,7 @@ public class TicTacToePiece extends Piece{
 	 * @return available moves; if Piece have no predetermined moves, return null
 	 */
 	@Override
-	public HashMap<Integer, Integer> move() {
+	public HashMap<Integer, Integer> getMoves() {
 		return null;
 	}
 	

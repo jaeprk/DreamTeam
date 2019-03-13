@@ -521,7 +521,7 @@ public final class GameGUI {
 				selectedRow = e.getY() / cellHeight;
 				
 				//If move is valid, add piece to game board, increment to next player and change status
-				if (gameBoard.validMove(selectedRow, selectedCol)) {
+				if (gameBoard.isMoveValid(selectedRow, selectedCol)) {
 					invalidInput = false;
 					
 					//If game reach end state
@@ -538,7 +538,7 @@ public final class GameGUI {
 					}
 					
 					//If game ended in a draw, close game JFrame and open continue prompt
-					else if (gameBoard.tiedGame()) {
+					else if (gameBoard.isGameTied()) {
 						frame.dispose();
 						new GameGUI("TIED GAME", gameSelected);
 					}

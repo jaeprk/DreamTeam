@@ -20,7 +20,7 @@ public abstract class Piece {
 	/* What are the movement of the pieces
 	 * @return a HashMap of all available moves
 	 */
-	public abstract HashMap<Integer, Integer> move();
+	public abstract HashMap<Integer, Integer> getMoves();
 	
 	/* A list of string for the piece icons
 	 * @param the player number of which the piece belong to

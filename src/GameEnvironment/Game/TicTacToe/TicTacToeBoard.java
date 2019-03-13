@@ -39,7 +39,7 @@ class TicTacToeBoard extends Board {
 	 * @return if move is valid
 	 */
 	@Override
-	public boolean validMove(int row, int col) {
+	public boolean isMoveValid(int row, int col) {
 		
 		//Player selected an empty space on the grid, add the piece to the Board gridPiece matrix, return true
 		if (super.getGridPieces()[row][col] == null) {
@@ -53,7 +53,7 @@ class TicTacToeBoard extends Board {
 	 * @return HashMap of row and col coordinates; return null if all empty spaces are allow 
 	 */
 	@Override
-	public HashMap<Integer, Integer> nextMove() {
+	public HashMap<Integer, Integer> getAvailableMoves() {
 		return null;
 	}
 	
@@ -64,54 +64,28 @@ class TicTacToeBoard extends Board {
 	public boolean endGame() {		
 		//Loop through entire Board gridPiece matrix and see if there is a winner	
 		for (int row = 0; row < super.getRows(); ++row)
-			for(int col = 0; col < super.getCols(); ++col) {
-				try {					
-					//Check NW diagonal for 3 matching
-					if(getPlayerIndex(row, col) == getPlayerIndex((row - 1), (col - 1)) && getPlayerIndex(row, col) == getPlayerIndex((row - 2),( col - 2)))
-						return true;				
-				//Continue to next index
-				} catch (NullPointerException | ArrayIndexOutOfBoundsException e) {/*do nothing*/}
-				
+			for(int col = 0; col < super.getCols(); ++col) {				
 				try {
-					//Check N for 3 matching
-					if(getPlayerIndex(row, col) == getPlayerIndex((row - 1), (col)) && getPlayerIndex(row, col) == getPlayerIndex((row - 2),( col)))
-						return true;
-					
-				} catch (NullPointerException | ArrayIndexOutOfBoundsException e) {/*do nothing*/}
-							
-				try {
-					//Check NE diagonal for 3 matching
-					if(getPlayerIndex(row, col) == getPlayerIndex((row - 1), (col + 1)) && getPlayerIndex(row, col) == getPlayerIndex((row - 2),( col + 2)))
-						return true;
-				} catch (NullPointerException | ArrayIndexOutOfBoundsException e) {/*do nothing*/}
-				
-				try {
-					//Check E for 3 matching
+					//Check rows for 3 matching
 					if(getPlayerIndex(row, col) == getPlayerIndex((row), (col + 1)) && getPlayerIndex(row, col) == getPlayerIndex((row),( col + 2)))
 						return true;
 				} catch (NullPointerException | ArrayIndexOutOfBoundsException e) {/*do nothing*/}
 				
 				try {
-					//Check SE diagonal for 3 matching
+					//Check forward slash diagonal for 3 matching
 					if(getPlayerIndex(row, col) == getPlayerIndex((row + 1), (col + 1)) && getPlayerIndex(row, col) == getPlayerIndex((row + 2),( col + 2)))
 						return true;
 				} catch (NullPointerException | ArrayIndexOutOfBoundsException e) {/*do nothing*/}	
 				
 				try {
-					//Check S for 3 matching
+					//Check columns for 3 matching
 					if(getPlayerIndex(row, col) == getPlayerIndex((row + 1), (col)) && getPlayerIndex(row, col) == getPlayerIndex((row + 2),( col)))
 						return true;
 				} catch (NullPointerException | ArrayIndexOutOfBoundsException e) {/*do nothing*/}	
 				
 				try {
-					//Check SW diagonal for 3 matching
+					//Check backward slash diagonal for 3 matching
 					if(getPlayerIndex(row, col) == getPlayerIndex((row + 1), (col - 1)) && getPlayerIndex(row, col) == getPlayerIndex((row + 2),( col - 2)))
-						return true;
-				} catch (NullPointerException | ArrayIndexOutOfBoundsException e) {/*do nothing*/}
-				
-				try {
-					//Check W for 3 matching
-					if(getPlayerIndex(row, col) == getPlayerIndex((row), (col - 1)) && getPlayerIndex(row, col) == getPlayerIndex((row),( col - 2)))
 						return true;
 				} catch (NullPointerException | ArrayIndexOutOfBoundsException e) {/*do nothing*/}
 			}
@@ -146,7 +120,7 @@ class TicTacToeBoard extends Board {
 	 * @return if game ended in a tie
 	 */
 	@Override
-	public boolean tiedGame() {
+	public boolean isGameTied() {
 		for (int row = 0; row < super.getRows(); ++row)
 			for (int col = 0; col < super.getCols(); ++col)
 				if (super.getGridPieces()[row][col] == null)

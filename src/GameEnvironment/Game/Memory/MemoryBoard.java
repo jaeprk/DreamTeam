@@ -51,4 +51,10 @@ class MemoryBoard extends Board {
 		
 	}
 
+	@Override
+	public boolean tiedGame() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

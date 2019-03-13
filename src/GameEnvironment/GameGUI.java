@@ -63,14 +63,6 @@ public final class GameGUI {
 	private boolean invalidInput;  //Is input valid	
 	private boolean continueGame;  //Determine if GUI is continue prompt
 	
-	//------------global color scheme-----------------------------------------------------------------------------------------------------------------
-	Color dark_gray = Color.DARK_GRAY;
-	Color light_gray = Color.LIGHT_GRAY;
-	Color white = Color.WHITE;
-	Color blue = Color.BLUE;
-	Color black = Color.BLACK;
-	Color red = Color.RED;
-	
 	//-----------default pieces icon-----------------------------------------------------------------------------------------------------------------
 	private final String iconDirectory = Main.GAME_ENVIR_DIRECTORY + "PlayerIcon/";
 	private final String[] defaultIcon = {iconDirectory + "player1.png", 
@@ -167,7 +159,7 @@ public final class GameGUI {
 	/* @constructor to continue game
 	 * @param name of winner and game
 	 */
-	public GameGUI(String winner, String game){
+	private GameGUI(String winner, String game){
 		System.out.println("Launching continue...");
 		this.maxComponents = 2;
 		this.continueGame = true;
@@ -233,10 +225,10 @@ public final class GameGUI {
         this.gbc.insets = new Insets(0, 0, 2, 0);
         
         //Set border style: border line weight = 3; empty border padding = 10 all around
-		this.contentPanel.setBorder(new CompoundBorder(BorderFactory.createLineBorder(this.dark_gray, 3), BorderFactory.createEmptyBorder(10,10,10,10))); 
+		this.contentPanel.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 3), BorderFactory.createEmptyBorder(10,10,10,10))); 
 		
 		//Set background style: color light grey 
-		this.contentPanel.setBackground(this.light_gray);
+		this.contentPanel.setBackground(Color.LIGHT_GRAY);
 	}
 	
 	/* Check if Components is added into contentPanel
@@ -337,7 +329,7 @@ public final class GameGUI {
 		for (int i = 0; i < sizeLabel; ++i) {
 			GameGUI.highestScoreLabel[i] = new JLabel();
 		   	GameGUI.highestScoreLabel[i].setOpaque(true);
-	    	GameGUI.highestScoreLabel[i].setBackground(this.white);
+	    	GameGUI.highestScoreLabel[i].setBackground(Color.WHITE);
 	    	GameGUI.highestScoreLabel[i].setVerticalAlignment(JLabel.TOP);
 		}
 	}
@@ -354,7 +346,7 @@ public final class GameGUI {
 		int player, i = 0, sLen = 23;
 		
 		//Iterate through savedScores HashMap
-	    for (Map.Entry<String, HashMap<String, Integer>> gameList: Main.savedScores.entrySet()) { 
+	    for (Map.Entry<String, HashMap<String, Integer>> gameList: Main.savedScores.entrySet()) {
 	    	player = 0;
         	String temp = "<html>" + gameList.getKey() + "<br/>";
         	for (int j = 0; j < sLen; ++j)
@@ -365,14 +357,15 @@ public final class GameGUI {
         	for (Map.Entry<String, Integer> playerScores : gameList.getValue().entrySet()) {     
         		
         		//Print player name and score
-        		temp += "&nbsp;&nbsp;" + (player + 1) + ": " + playerScores.getKey() + "- ";
-        		temp += playerScores.getValue().toString() + "<br/>";
-        		player++;
+        		if (player++ < this.MAX_HIGHEST_PLAYER) {
+	        		temp += "&nbsp;&nbsp;" + (player) + ": " + playerScores.getKey() + " - ";
+	        		temp += playerScores.getValue().toString() + "<br/>";
+        		}
         	} 
         	
         	//Remaining players are blank
         	for (; player < this.MAX_HIGHEST_PLAYER; ++player)
-        		temp += "&nbsp;&nbsp;" + (player + 1) + ": _______" + ": __<br/>" ;
+        		temp += "&nbsp;&nbsp;" + (player + 1) + ": _______" + " - __<br/>" ;
         	temp += "</html>";        	
         	
         	//Set text of JLabel
@@ -397,29 +390,33 @@ public final class GameGUI {
 				//Determine color of player; current player is blue
 				for (int i = 0; i < playerLabel.length; ++i)
 					if (i == (gameBoard.currentPlayer - 1))
-						playerLabel[i].setForeground(blue);
+						playerLabel[i].setForeground(Color.BLUE);
 					else
-						playerLabel[i].setForeground(black);
+						playerLabel[i].setForeground(Color.BLACK);
 				
 				//Set status label
 				statusLabel.setText(statusText);
 				super.paintComponent(g);    
-				setBackground(white);
-				g.setColor(dark_gray);	
+				setBackground(gameBoard.getColor());
+				g.setColor(Color.DARK_GRAY);	
 				
 				//Loop through the rows and cells
 				for (int row = 0; row < gameBoard.getRows(); ++row) {
 					for (int col = 0; col < gameBoard.getCols(); ++col) {
 						
 						//Alternate between cells and color them dark_gray
-						if ((row + col) % 2 == 0) 
-							g.fillRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
+						if (gameBoard.getPattern() == Pattern.CHECKERED) {
+							if ((row + col) % 2 == 0) 
+								g.fillRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);							
+						}
+						else if (gameBoard.getPattern() == Pattern.BLANK)
+							g.drawRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
 						
 						//If input is invalid, color that cell red 
 						if (invalidInput && selectedRow == row && selectedCol == col) {
-							g.setColor(red);
+							g.setColor(Color.RED);
 							g.fillRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
-							g.setColor(dark_gray);
+							g.setColor(Color.DARK_GRAY);
 						}
 						
 						//If there is a piece in the game board, add the piece icon
@@ -432,7 +429,7 @@ public final class GameGUI {
 							} 
 							catch (IOException | ArrayIndexOutOfBoundsException e) {
 								//Alternative image is used if not is found
-								try {image = ImageIO.read(new File(defaultIcon[gameBoard.getGridPieces()[row][col].player - 1]));}
+								try {image = ImageIO.read(new File(defaultIcon[(gameBoard.getGridPieces()[row][col].player - 1) % defaultIcon.length]));}
 								catch (IOException ex) {/*do nothing*/}
 							}
 							finally {

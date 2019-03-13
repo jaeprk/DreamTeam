@@ -1,4 +1,5 @@
 package GameEnvironment;
+import java.awt.Color;
 import java.util.HashMap;
 
 /* Abstract Board.java class for: 
@@ -16,7 +17,7 @@ public abstract class Board {
 	private Piece currentPiece; //Single instance of a piece
 	private Interaction interaction; //Board interaction
 	private Pattern pattern;
-	private String color;
+	private Color color;
 	static int maxPlayer; //Max number of players
 	protected int currentPlayer; //Current player number
 	
@@ -27,12 +28,14 @@ public abstract class Board {
 		this.rows = rows;
 		this.cols = cols;
 		this.interaction = interaction;
-		this.maxPlayer = maxPlayer;
+		Board.maxPlayer = maxPlayer;
 		this.currentPiece = currentPiece;
 		this.gridPieces = new Piece[this.rows][this.cols];
+		this.pattern = Pattern.CHECKERED;
+		this.color = Color.WHITE;
 	}
 	
-	protected Board(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece, Pattern pattern, String color) {
+	protected Board(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece, Pattern pattern, Color color) {
 		this(rows, cols, maxPlayer, interaction, currentPiece);
 		this.pattern = pattern;
 		this.color = color;
@@ -137,9 +140,9 @@ public abstract class Board {
 	}
 	
 	/* Get name of board color
-	 * @return current piece
+	 * @return board color
 	 */
-	public String getColor() {
+	public Color getColor() {
 		return this.color;
 	}
 }

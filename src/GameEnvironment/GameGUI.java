@@ -39,7 +39,6 @@ public final class GameGUI {
 	//-------------------private global variables, used by GameGUI class-----------------------------------------------------------------------------
 	final private String GAME_LAUNCHER = "Game Launcher";	//Name of Game Launcher GUI
 	private final String QUIT = "QUIT GAME";  //Quit Button text
-	private final String STATUS = "Status: ";  //Status text beginning 
 	private String statusText;  //Text of current game status, used for statusLabel
 	private String[] gameList;   //List of games name
 	String gameSelected;  //Game selected
@@ -278,7 +277,7 @@ public final class GameGUI {
 		//Set player labels, list of current players, and current status
 		this.playerLabel = new JLabel[Board.maxPlayer];
 		GameGUI.players = new String[Board.maxPlayer];
-		this.statusText = STATUS + "Currently Player " + this.gameBoard.currentPlayer + " turn...";
+		this.statusText = this.gameBoard.getStatus();
 		
 		//Determine player names
 		for (int i = 0; i < this.playerLabel.length; ++i) {
@@ -442,7 +441,7 @@ public final class GameGUI {
 						}
 					}					
 				}
-				//Highlight cell of all available moves, if it is not null
+				//Highlight cell of all available moves, if it is not empty
 				if (!gameBoard.getAvailableMoves().isEmpty()) {
 					if (gameBoard.getColor() == Color.GREEN)
 						g.setColor(Color.BLUE);
@@ -455,6 +454,7 @@ public final class GameGUI {
 					Stroke oldStroke = g2.getStroke();
 					g2.setStroke(new BasicStroke((float) thickness));
 					
+					//Loop through available moves and highlight box
 					for (Point coord: gameBoard.getAvailableMoves())
 						g2.drawRect(coord.y * cellWidth, coord.x * cellHeight, cellWidth, cellHeight);
 					g2.setStroke(oldStroke);		
@@ -557,14 +557,14 @@ public final class GameGUI {
 					//Else, game continues with next player
 					else {						
 						gameBoard.nextPlayer();
-						statusText = STATUS + "Currently Player " + gameBoard.currentPlayer + " turn...";		
+						statusText = gameBoard.getStatus();		
 					}
 				}	
 				
 				//Else mark is invalid and print status 
 				else {
 					invalidInput = true;
-					statusText = STATUS + "Invalid Input";
+					statusText = "Status: Invalid Input";
 				}
 				
 				//Repaint game panel paintComponents

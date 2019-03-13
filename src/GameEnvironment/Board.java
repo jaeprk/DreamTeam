@@ -147,4 +147,11 @@ public abstract class Board {
 	public Color getColor() {
 		return this.color;
 	}
+	
+	/* Get current status of board
+	 * @return status string
+	 */
+	protected String getStatus() {
+		return "Status: Currently Player " + this.currentPlayer + " turn...";
+	}
 }

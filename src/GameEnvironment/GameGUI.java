@@ -456,7 +456,7 @@ public final class GameGUI {
 					g2.setStroke(new BasicStroke((float) thickness));
 					
 					for (Point coord: gameBoard.getAvailableMoves())
-						g2.drawRect(coord.x * cellWidth, coord.y * cellHeight, cellWidth, cellHeight);
+						g2.drawRect(coord.y * cellWidth, coord.x * cellHeight, cellWidth, cellHeight);
 					g2.setStroke(oldStroke);		
 				}			
 			}

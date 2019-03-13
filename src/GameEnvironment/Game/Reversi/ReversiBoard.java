@@ -14,7 +14,7 @@ import GameEnvironment.Piece;
 public class ReversiBoard extends Board{
 	
 	private List<Integer> direction;
-	private Boolean lock;
+	private Boolean lock, update;
 
 	protected ReversiBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece) {
 		super(rows, cols, maxPlayer, interaction, currentPiece);		
@@ -46,42 +46,50 @@ public class ReversiBoard extends Board{
 			return false;
 		
 		if(leftDirection(row,col)== 3){
-			updateGrid(row, col, new ReversiPiece("",currentPlayer));
+			if (this.update)
+				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(3);
 		}
 		resetLock();
 		if(rightDirection(row,col) == 4){
-			updateGrid(row, col, new ReversiPiece("",currentPlayer));
+			if (this.update)
+				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(4);
 		}
 		resetLock();
 		if(upDirection(row,col) == 5){
-			updateGrid(row, col, new ReversiPiece("",currentPlayer));
+			if (this.update)
+				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(5);
 		}
 		resetLock();
 		if(downDirection(row,col) == 6){
-			updateGrid(row, col, new ReversiPiece("",currentPlayer));
+			if (this.update)
+				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(6);
 		}
 		resetLock();
 		if(leftUpDirection(row,col)== 7){
-			updateGrid(row, col, new ReversiPiece("",currentPlayer));
+			if (this.update)
+				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(7);
 		}
 		resetLock();
 		if(rightUpDirection(row,col)== 8){
-			updateGrid(row, col, new ReversiPiece("",currentPlayer));
+			if (this.update)
+				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(8);
 		}
 		resetLock();
 		if(leftDownDirection(row,col) == 9){
-			updateGrid(row, col, new ReversiPiece("",currentPlayer));
+			if (this.update)
+				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(9);
 		}
 		resetLock();
 		if(rightDownDirection(row,col) == 10){
-			updateGrid(row, col, new ReversiPiece("",currentPlayer));
+			if (this.update)
+				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(10);
 		}
 		resetLock();
@@ -115,6 +123,7 @@ public class ReversiBoard extends Board{
 
 	@Override
 	public List<Point> getAvailableMoves() {
+		this.update = false;
 		List<Point> allValidMoves = new ArrayList<Point>();
 		for(int row = 0; row<8; row++){
 			for(int col = 0; col<8; col++){
@@ -125,6 +134,7 @@ public class ReversiBoard extends Board{
 				}
 			}
 		}
+		this.update = true;
 		return allValidMoves;
 	}
 
@@ -327,8 +337,10 @@ public class ReversiBoard extends Board{
 	private void flipLeftDirection(int r, int c){
 		int i = c-1;
 		while(getGridPieces()[r][i].playerNumber() != currentPlayer){
-			updateGrid(r, i, new ReversiPiece("",currentPlayer));
-			i--;
+			if (this.update) 
+				updateGrid(r, i, new ReversiPiece("",currentPlayer));
+				i--;
+			
 		}
 			
 	}
@@ -336,24 +348,30 @@ public class ReversiBoard extends Board{
 	private void flipRightDirection(int r, int c){
 		int i = c+1;
 		while(getGridPieces()[r][i].playerNumber() != currentPlayer){
-			updateGrid(r, i, new ReversiPiece("", currentPlayer));
-			i++;
+			if (this.update) 
+				updateGrid(r, i, new ReversiPiece("", currentPlayer));
+				i++;
+			
 		}
 	}
 	
 	private void flipUpDirection(int r, int c){
 		int i = r-1;
 		while(getGridPieces()[i][c].playerNumber() != currentPlayer){
-			updateGrid(i, c, new ReversiPiece("",currentPlayer));
-			i--;
+			if (this.update) 
+				updateGrid(i, c, new ReversiPiece("",currentPlayer));
+				i--;
+			
 		}
 	}
 	
 	private void flipDownDirection(int r, int c){
 		int i = r+1;
 		while(getGridPieces()[i][c].playerNumber() != currentPlayer){
-			updateGrid(i, c, new ReversiPiece("", currentPlayer));
-			i++;
+			if (this.update) 
+				updateGrid(i, c, new ReversiPiece("", currentPlayer));
+				i++;
+			
 		}
 	}
 	
@@ -361,9 +379,11 @@ public class ReversiBoard extends Board{
 		int i = r-1;
 		int j = c-1;
 		while(getGridPieces()[i][j].playerNumber() != currentPlayer){
-			updateGrid(i,j, new ReversiPiece("", currentPlayer));
-			i--;
-			j--;
+			if (this.update) 
+				updateGrid(i,j, new ReversiPiece("", currentPlayer));
+				i--;
+				j--;
+			
 		}
 	}
 	
@@ -371,9 +391,11 @@ public class ReversiBoard extends Board{
 		int i = r-1;
 		int j = c+1;
 		while(getGridPieces()[i][j].playerNumber()!= currentPlayer){
-			updateGrid(i,j, new ReversiPiece("", currentPlayer));
-			i--;
-			j++;
+			if (this.update) 
+				updateGrid(i,j, new ReversiPiece("", currentPlayer));
+				i--;
+				j++;
+			
 		}
 	}
 	
@@ -381,9 +403,11 @@ public class ReversiBoard extends Board{
 		int i = r+1;
 		int j = c-1;
 		while(getGridPieces()[i][j].playerNumber() != currentPlayer){
-			updateGrid(i,j, new ReversiPiece("", currentPlayer));
-			i++;
-			j--;
+			if (this.update) 
+				updateGrid(i,j, new ReversiPiece("", currentPlayer));
+				i++;
+				j--;
+			
 		}
 	}
 	
@@ -391,9 +415,11 @@ public class ReversiBoard extends Board{
 		int i = r+1;
 		int j = c+1;
 		while(getGridPieces()[i][j].playerNumber() != currentPlayer){
-			updateGrid(i,j,new ReversiPiece("", currentPlayer));
-			i++;
-			j++;
+			if (this.update) 
+				updateGrid(i,j,new ReversiPiece("", currentPlayer));
+				i++;
+				j++;
+			
 		}
 	}
 
@@ -408,7 +434,7 @@ public class ReversiBoard extends Board{
 	private void resetLock(){
 		lock = false;
 	}
-
+	
 	@Override
 	public boolean isGameTied() {
 		// TODO Auto-generated method stub

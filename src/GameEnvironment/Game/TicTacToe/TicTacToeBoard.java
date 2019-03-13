@@ -102,7 +102,8 @@ class TicTacToeBoard extends Board {
 
 
 	@Override
-	protected void calculateScore() {
+	protected int calculateScore() {
+		return 1;
 	}	
 }
 

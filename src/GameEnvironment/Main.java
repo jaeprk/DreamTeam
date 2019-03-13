@@ -32,6 +32,7 @@ public final class Main {
 	//-------------------static variables, used by package---------------------------------------------------------------------------------------------------
 	protected static Map<String, HashMap<String, Integer>> savedScores; 
 	static String playerOne, playerTwo;
+	static String[] gamePlayers; // game players holders for score update
 	final static String GAME_ENVIR_DIRECTORY = System.getProperty("user.dir") + "/src/GameEnvironment/"; //directory of Main package, GameEnvironment
 	
 	public static void main(String[] args) {
@@ -46,6 +47,7 @@ public final class Main {
 	 */
 	private static void start() {
 		String[] gameList = grabGameList();
+		gamePlayers = new String[2];
 		
 		//If Game folder could not be found or is empty, print prompt and terminate program
 		if (gameList == null) {
@@ -197,6 +199,23 @@ public final class Main {
         }
         return true;
 	}
+	
+	
+	/*
+	 * Helper function to update players' scores for each game
+	 * It is assumed that the player passed is the winning player: the last, current player when game ends
+	 */
+	public static void addScore(String game, String player, int score) {
+		// if player doesn't exist, add it to saved scores map
+		if(!Main.savedScores.get(game).containsKey(player)) {
+			Main.savedScores.get(game).put(player, score);
+		}
+		
+		// update score of existing players for chosen game
+		Integer something = Main.savedScores.get(game).get(player);
+		Main.savedScores.get(game).put(player, something + score);
+	}
+	
 	
 	//-----------------------other helper function-------------------------------------------------------------------------------------------	
 	/* Helper function to print out savedScores HashMap; used for debugging purposes

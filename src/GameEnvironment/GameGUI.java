@@ -45,7 +45,7 @@ public final class GameGUI {
 	String gameSelected;  //Game selected
 	
 	private JFrame frame;   //JFrame being used	
-	private JPanel contentPanel, gamePanel;   //Primary content/background panel; panel to play game on
+	private static JPanel contentPanel, gamePanel;   //Primary content/background panel; panel to play game on
 	private GridBagConstraints gbc;  //Constraints used for the GridBagLayout
 	private JButton[] gameButton;   //List of game buttons	
 	private JButton quitButton;   //Quit button for game
@@ -472,12 +472,14 @@ public final class GameGUI {
 						if (!enterPlayer[0].getText().isEmpty() && !enterPlayer[1].getText().isEmpty()) {
 							
 							//Lock JTextField
-							enterPlayer[2].setEditable(false);
+							enterPlayer[0].setEditable(false);
 							enterPlayer[1].setEditable(false);
 							
 							//Set name of player 1 and 2
-							Main.playerOne = enterPlayer[0].getText();
+							Main.playerOne = enterPlayer[0].getText();		
+							Main.gamePlayers[0] = enterPlayer[0].getText();
 							Main.playerTwo = enterPlayer[1].getText();
+							Main.gamePlayers[1] = enterPlayer[1].getText();
 							
 							//Get name of JButton
 							gameSelected =((JButton) source.getSource()).getActionCommand();
@@ -502,7 +504,7 @@ public final class GameGUI {
 
 		//				
 		//				resetSavedGameLabel();
-			//				contentPanel.revalidate();				
+//							contentPanel.revalidate();				
 					}
 				});
 			}
@@ -525,7 +527,11 @@ public final class GameGUI {
 					invalidInput = false;
 					
 					if (gameBoard.endGame()) {
-						new GameGUI("Bob", gameSelected.toString());
+						new GameGUI("Bob", gameSelected);
+						
+						// call to update game scores after game ends. Winning player is last, current player
+						Main.addScore(gameSelected, Main.gamePlayers[gameBoard.currentPlayer-1], gameBoard.calculateScore());
+						resetSavedGameLabel();
 					}
 					
 					else {						

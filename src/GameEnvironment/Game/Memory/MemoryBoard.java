@@ -39,8 +39,9 @@ class MemoryBoard extends Board {
 	}
 
 	@Override
-	protected void calculateScore() {
+	protected int calculateScore() {
 		// TODO Auto-generated method stub
+		return 0;
 		
 	}
 

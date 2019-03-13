@@ -64,7 +64,7 @@ public abstract class Board {
 	/* Calculate scores for the winner and loser
 	 * Add game score to savedScores HashMap, in Main.java using the playerOne and playerTwo String, in Main.java 
 	 */
-	protected abstract void calculateScore();
+	protected abstract int calculateScore();
 	
 	/* Helper function to determine next player, cycle through all the players
 	 */	

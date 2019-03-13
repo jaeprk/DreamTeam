@@ -45,7 +45,7 @@ public class ReversiBoard extends Board{
 		if(getGridPieces()[row][col] != null)
 			return false;
 		
-		if(leftDirection(row,col)==3){
+		if(leftDirection(row,col)== 3){
 			updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(3);
 		}
@@ -65,12 +65,12 @@ public class ReversiBoard extends Board{
 			direction.add(6);
 		}
 		resetLock();
-		if(leftUpDirection(row,col)==7){
+		if(leftUpDirection(row,col)== 7){
 			updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(7);
 		}
 		resetLock();
-		if(rightUpDirection(row,col)==8){
+		if(rightUpDirection(row,col)== 8){
 			updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(8);
 		}

@@ -1,6 +1,7 @@
 package GameEnvironment.Game.TicTacToe;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 
 import GameEnvironment.Piece;
@@ -24,7 +25,7 @@ public class TicTacToePiece extends Piece{
 	 */
 	@Override
 	public List<Point> getMoves() {
-		return null;
+		return new ArrayList<Point>();
 	}
 	
 	/* Get the Piece Icon from the pieceIcon string

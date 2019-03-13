@@ -2,6 +2,7 @@ package GameEnvironment.Game.TicTacToe;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 
 import GameEnvironment.Board;
@@ -55,7 +56,7 @@ class TicTacToeBoard extends Board {
 	 */
 	@Override
 	public List<Point> getAvailableMoves() {
-		return null;
+		return new ArrayList<Point>();
 	}
 	
 	/* Determine end game condition

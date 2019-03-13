@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -61,7 +62,6 @@ public final class GameGUI {
 	private Board gameBoard;  //Current board game object	
 	private boolean invalidInput;  //Is input valid	
 	private boolean continueGame;  //Determine if GUI is continue prompt
-	private boolean addPlayers;  //Determine if there are more than 2 players in the game
 	
 	//-----------default pieces icon-----------------------------------------------------------------------------------------------------------------
 	private final String iconDirectory = Main.GAME_ENVIR_DIRECTORY + "PlayerIcon/";
@@ -131,13 +131,7 @@ public final class GameGUI {
 		
 		//Grab game board and start it
 		this.gameBoard = board;
-		this.gameBoard.startGame();	
-		
-		//If there are more than 2 players, generate JTextField to enter them
-		if (Board.maxPlayer > 2) {
-			this.addPlayers = true; 
-			new GameGUI();
-		}
+		this.gameBoard.startGame();
 		
 		//Create JFrame and add close operation procedures
 		createFrame(this.gameSelected);
@@ -156,33 +150,6 @@ public final class GameGUI {
 		
 		//Add content panel to JFrame, resize JFrame and make it visible 
 		buttonListener(temp);
-		this.frame.add(this.contentPanel);
-		this.frame.pack();
-		this.frame.setVisible(true);		
-	}
-	
-	/* @constructor to generate JTextField for more than 2 players
-	 */
-	private GameGUI(){
-		System.out.println("Adding additional players...");
-		this.maxComponents = 2;
-		this.continueGame = true;
-		
-		//Create JFrame and add close operation procedures
-		createFrame("Add Additional Players");
-		
-		//Create content/background panel, JLabel from savedScores HashMap
-		createContentPanel();		
-		
-		checkContentPanel(
-			//TopPanel
-			addComponents(1, createPlayerInput()), 
-			//MidPanel
-			false,
-			//BotPanel
-			false);
-		
-		//Add content panel to JFrame, resize JFrame and make it visible 
 		this.frame.add(this.contentPanel);
 		this.frame.pack();
 		this.frame.setVisible(true);		
@@ -314,33 +281,14 @@ public final class GameGUI {
 		this.statusText = STATUS + "Currently Player " + this.gameBoard.currentPlayer + " turn...";
 		
 		//Determine player names
-		for (int i = 0; i < this.playerLabel.length; ++i) {			
-			GameGUI.players[i] = GameGUI.enterPlayer[i].getText();			
+		for (int i = 0; i < this.playerLabel.length; ++i) {
+			if (i < 2)
+				GameGUI.players[i] = GameGUI.enterPlayer[i].getText();
+			else
+				GameGUI.players[i] = "Unnamed Player " + (i + 1);
 			this.playerLabel[i] = new JLabel("Player " + (i + 1) + ": " + GameGUI.players[i], SwingConstants.CENTER);			
 		}
 		return this.playerLabel;
-	}
-	
-	/* Create player input JTextField
-	 * @return labels and JTextField for additional players
-	 */
-	private Component[] createPlayerInput() {
-		Component[] temp = new Component[(Board.maxPlayer - 2) * 2];
-		int j = 0;
-		
-		//Resize enterPlayer JTextField
-		JTextField [] tempTextField = GameGUI.enterPlayer;
-		GameGUI.enterPlayer = new JTextField[Board.maxPlayer];
-		GameGUI.enterPlayer[j] = tempTextField[j++];
-		GameGUI.enterPlayer[j] = tempTextField[j++];
-		
-		
-		for (int i = 0; i < (Board.maxPlayer - 2) * 2; ++i) {			
-			temp[i++] = new JLabel("Enter Player " + (j + 1) + ": ");			
-			temp[i] = (GameGUI.enterPlayer[j] = new JTextField());
-			GameGUI.enterPlayer[j++].setPreferredSize(this.textDimension);
-		}		
-		return temp;
 	}
 	
 	/* Create JButton Components
@@ -470,6 +418,10 @@ public final class GameGUI {
 							g.setColor(Color.DARK_GRAY);
 						}
 						
+						
+						
+						
+						
 						//If there is a piece in the game board, add the piece icon
 						if (gameBoard.getGridPieces()[row][col] != null) {
 							BufferedImage image = null;
@@ -488,17 +440,25 @@ public final class GameGUI {
 								g.drawImage(image, col * cellWidth, row * cellHeight, cellWidth, cellHeight, null);
 							}
 						}
-					}
-//					g.setColor(red);
-//					Graphics2D g2 = (Graphics2D) g;
-//					double thickness = 10;
-//					Stroke oldStroke = g2.getStroke();
-//					g2.setStroke(new BasicStroke((float) thickness));
-//					g2.drawRect(1 * cellWidth, 1 * cellHeight, cellWidth, cellHeight);
-//					g2.setStroke(oldStroke);
-//					g.setColor(dark_gray);
-//					
-				}				
+					}					
+				}
+				//Highlight cell of all available moves, if it is not null
+				if (!gameBoard.getAvailableMoves().isEmpty()) {
+					if (gameBoard.getColor() == Color.GREEN)
+						g.setColor(Color.BLUE);
+					else
+						g.setColor(Color.GREEN);
+					
+					//Determine thickness of highlight, store old highLight
+					Graphics2D g2 = (Graphics2D) g;
+					double thickness = 4;
+					Stroke oldStroke = g2.getStroke();
+					g2.setStroke(new BasicStroke((float) thickness));
+					
+					for (Point coord: gameBoard.getAvailableMoves())
+						g2.drawRect(coord.x * cellWidth, coord.y * cellHeight, cellWidth, cellHeight);
+					g2.setStroke(oldStroke);		
+				}			
 			}
 		}; 
 		

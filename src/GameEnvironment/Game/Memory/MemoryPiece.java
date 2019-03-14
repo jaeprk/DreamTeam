@@ -1,12 +1,14 @@
 package GameEnvironment.Game.Memory;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 
 import GameEnvironment.Piece;
 
-class MemoryPiece extends Piece {
-	private static final String gameFolder = System.getProperty("user.dir") + "\\GameEnvironment\\Game\\Memory\\";
+class MemoryPiece extends Piece 
+{
+	private static final String gameFolder = System.getProperty("user.dir") + "/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";
 	private final String[] pieceIcon = {gameFolder + "1.png", gameFolder + "2.png", gameFolder + "3.png", gameFolder + "4.png",
 										gameFolder + "5.png", gameFolder + "6.png", gameFolder + "A.png", gameFolder + "B.png",
 										gameFolder + "C.png", gameFolder + "D.png", gameFolder + "E.png", gameFolder + "F.png",
@@ -16,20 +18,25 @@ class MemoryPiece extends Piece {
 										gameFolder + "S.png", gameFolder + "T.png", gameFolder + "U.png", gameFolder + "V.png",
 										gameFolder + "W.png", gameFolder + "X.png", gameFolder + "Y.png", gameFolder + "Z.png"};
 	
-	protected MemoryPiece(String pieceName, int player) {
+	protected MemoryPiece(String pieceName, int player) 
+	{
 		super(pieceName, player);
 		this.player = player;
 	}
 
 	@Override
 	public List<Point> getMoves() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<Point>();
 	}
 
 	@Override
-	public String getIcons(int player) {
+	public String getIcons(int player) 
+	{
 		return pieceIcon[player - 1];
+	}
+	
+	public int getPiece() {
+		return this.player;
 	}
 
 }

@@ -1,5 +1,7 @@
 package GameEnvironment;
-import java.util.HashMap;
+
+import java.awt.Color;
+import java.awt.Point;
 
 /* Abstract Board.java class for: 
  *   - Creating a board object
@@ -13,8 +15,10 @@ public abstract class Board {
 	private int rows; //Number of rows for the board 
 	private int cols; //Number of cols for the board
 	private Piece[][] gridPieces; //Matrix for the pieces
-	private Piece currentPiece; //Single instance of a piece
+	protected Piece currentPiece; //Single instance of a piece
 	private Interaction interaction; //Board interaction
+	private Pattern pattern;
+	private Color color;
 	static int maxPlayer; //Max number of players
 	protected int currentPlayer; //Current player number
 	
@@ -28,6 +32,14 @@ public abstract class Board {
 		Board.maxPlayer = maxPlayer;
 		this.currentPiece = currentPiece;
 		this.gridPieces = new Piece[this.rows][this.cols];
+		this.pattern = Pattern.CHECKERED;
+		this.color = Color.WHITE;
+	}
+	
+	protected Board(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece, Pattern pattern, Color color) {
+		this(rows, cols, maxPlayer, interaction, currentPiece);
+		this.pattern = pattern;
+		this.color = color;
 	}
 	
 	/* Set currentPlayer to the starting player number; should correspond with the Piece object
@@ -39,14 +51,14 @@ public abstract class Board {
 	 * Call Piece move method to get current move and check with the gridPieces to determine if move is valid
 	 * @return if move is valid
 	 */
-	public abstract boolean validMove(int row, int col);
+	public abstract boolean isMoveValid(int row, int col);
 	
 	/* Determine what are the available next move for the pieces
 	 * Call Piece move method to get current move and check with the gridPieces to determine if next move is available
 	 * if valid, call nextPlayer method;
 	 * @return a HashMap of all available next move; else return null;
 	 */
-	public abstract HashMap<Integer, Integer> nextMove(); 
+	public abstract Point[] getAvailableMoves(); 
 	
 	/* End game state, determine if the game is completed
 	 * Loop through the gridPieces to determine so
@@ -54,6 +66,12 @@ public abstract class Board {
 	 * @return if game has ended
 	 */
 	public abstract boolean endGame();
+	
+	/* Tied game state, determine if the game is completed and no winner
+	 * Loop through the gridPieces to determine so
+	 * @return if game has ended in a tie
+	 */
+	public abstract boolean isGameTied();
 	
 	/* Add new pieces to gridPieces, if validMove function is true 
 	 */
@@ -64,7 +82,7 @@ public abstract class Board {
 	/* Calculate scores for the winner and loser
 	 * Add game score to savedScores HashMap, in Main.java using the playerOne and playerTwo String, in Main.java 
 	 */
-	protected abstract void calculateScore();
+	protected abstract int calculateScore();
 	
 	/* Helper function to determine next player, cycle through all the players
 	 */	
@@ -113,5 +131,19 @@ public abstract class Board {
 	 */
 	public Piece getCurrentPiece() {
 		return this.currentPiece;
+	}
+	
+	/* Get board pattern
+	 * @return current board pattern
+	 */
+	public Pattern getPattern() {
+		return this.pattern;
+	}
+	
+	/* Get name of board color
+	 * @return board color
+	 */
+	public Color getColor() {
+		return this.color;
 	}
 }

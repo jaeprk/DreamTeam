@@ -48,48 +48,40 @@ public final class GameGUI {
 	private JPanel contentPanel, gamePanel;   //Primary content/background panel; panel to play game on
 	private GridBagConstraints gbc;  //Constraints used for the GridBagLayout
 	private JButton[] gameButton;   //List of game buttons	
-	private JButton quitButton;   //Quit button for game
-	private JTextField[] enterPlayer;  //Text field input for the two players
 	private JLabel statusLabel;  //Status label for the game
-	private JLabel[] player;   //Player label for the game
+	private JLabel[] playerLabel;   //Player label for the game
 	private final Dimension gameDimension = new Dimension (600, 600);  //Dimension of the game panel
 	private final Dimension textDimension = new Dimension (125, 25);  //Default dimension of JTextField
 	private final Dimension buttonDimension = new Dimension (125, 30);   //Default dimension of JButton
-
-	private final int MAX_X_COMPONENTS = 4;  //Maximum number of 
+	
 	private final int MAX_HIGHEST_PLAYER = 10;  //Number of players to display for the game stats
+	private int maxComponents;  //Maximum number of components per line	
 	private int gridy;  //Current y-axis of the grid, used for GridBagConstraints
 	private int cellWidth, cellHeight, selectedRow, selectedCol; //Width of game cell, height of game cell, currently selected row and col
 	
 	private Board gameBoard;  //Current board game object	
-	private boolean invalidInput;  //Is input valid
-	
-	
-	//------------global color scheme-----------------------------------------------------------------------------------------------------------------
-	Color dark_gray = Color.DARK_GRAY;
-	Color light_gray = Color.LIGHT_GRAY;
-	Color white = Color.WHITE;
-	Color blue = Color.BLUE;
-	Color black = Color.BLACK;
-	Color red = Color.RED;
+	private boolean invalidInput;  //Is input valid	
+	private boolean continueGame;  //Determine if GUI is continue prompt
 	
 	//-----------default pieces icon-----------------------------------------------------------------------------------------------------------------
 	private final String iconDirectory = Main.GAME_ENVIR_DIRECTORY + "PlayerIcon/";
 	private final String[] defaultIcon = {iconDirectory + "player1.png", 
 			                              iconDirectory + "player2.png", 
 			                              iconDirectory + "player3.png", 
-			                              iconDirectory + "player4.png"};
-	private final String[] altIcon = {iconDirectory + "player1alt.png", 
-            						  iconDirectory + "player2alt.png", 
-            						  iconDirectory + "player3alt.png", 
-            						  iconDirectory + "player4alt.png"};
-	private final String[] altIcon2 = {iconDirectory + "player1alt2.png", 
-            						   iconDirectory + "player2alt2.png", 
-            						   iconDirectory + "player3alt2.png", 
-            						   iconDirectory + "player4alt2.png"};
+			                              iconDirectory + "player4.png",
+										  iconDirectory + "player1alt.png", 
+										  iconDirectory + "player2alt.png", 
+										  iconDirectory + "player3alt.png", 
+										  iconDirectory + "player4alt.png",
+										  iconDirectory + "player1alt2.png", 
+										  iconDirectory + "player2alt2.png", 
+										  iconDirectory + "player3alt2.png", 
+										  iconDirectory + "player4alt2.png"};
 	
 	//------------static global variable, used by package---------------------------------------------------------------------------------------------
 	static JLabel[] highestScoreLabel;  //Label for highest scores per game
+	static JTextField[] enterPlayer;  //Text field input for the players
+	static String[] players; //List of current players
 	
 	/* @constructor to create the Game Launcher
 	 * @param list of games found in the Game Folder
@@ -97,7 +89,8 @@ public final class GameGUI {
 	GameGUI(String[] gameList){
 		System.out.println("Loading Game Launcher...");
 		this.gameList = gameList;
-		this.enterPlayer = new JTextField[2];
+		this.maxComponents = 4;
+		GameGUI.enterPlayer = new JTextField[2];
 		
 		//Create JFrame and add close operation procedures
 		createFrame(this.GAME_LAUNCHER);
@@ -111,16 +104,16 @@ public final class GameGUI {
 		checkContentPanel(
 				//TopPanel
 				addComponents(1, new JLabel("Player One: ", SwingConstants.RIGHT), 
-						      this.enterPlayer[0] = new JTextField(), 
+						      GameGUI.enterPlayer[0] = new JTextField(), 
 						      new JLabel("Player Two: ", SwingConstants.RIGHT), 
-						      this.enterPlayer[1] = new JTextField()), 
+						      GameGUI.enterPlayer[1] = new JTextField()), 
 				//MidPanel
 				addComponents(1, createButton(this.gameList)),
 				//BotPanel
 				addComponents(1, GameGUI.highestScoreLabel));
 		
-		this.enterPlayer[0].setPreferredSize(this.textDimension);
-		this.enterPlayer[1].setPreferredSize(this.textDimension);
+		GameGUI.enterPlayer[0].setPreferredSize(this.textDimension);
+		GameGUI.enterPlayer[1].setPreferredSize(this.textDimension);
 		
 		//Add content panel to JFrame, resize JFrame and make it visible 
 		this.frame.add(this.contentPanel);
@@ -134,32 +127,29 @@ public final class GameGUI {
 	public GameGUI(Board board, String gameName){
 		this.gameSelected = gameName;
 		System.out.println("Launching game: " + this.gameSelected + "...");
+		this.maxComponents = 2;
 		
 		//Grab game board and start it
 		this.gameBoard = board;
-		this.gameBoard.startGame();
-		
-		//Set player labels and current status
-		player = new JLabel[Board.maxPlayer];
-		statusText = STATUS + "Currently Player " + this.gameBoard.currentPlayer + " turn";
+		this.gameBoard.startGame();		
 		
 		//Create JFrame and add close operation procedures
 		createFrame(this.gameSelected);
 		
 		//Create content/background panel, JLabel from savedScores HashMap
-		createContentPanel();		
+		createContentPanel();
+		JButton temp = new JButton(this.QUIT);
 		
 		checkContentPanel(
 			//TopPanel
-			addComponents(1, player[0] = new JLabel("Player One: " + Main.playerOne, SwingConstants.LEFT), 
-					      player[1] = new JLabel("Player Two: " + Main.playerTwo, SwingConstants.LEFT)), 
+			addComponents(1, createPlayerLabels()), 
 			//MidPanel
 			addComponents(2, createGamePanel()),
 			//BotPanel
-			addComponents(1, this.statusLabel = new JLabel(statusText, SwingConstants.LEFT), this.quitButton = new JButton(this.QUIT)));
+			addComponents(1,  this.statusLabel = new JLabel(statusText, SwingConstants.LEFT), temp));
 		
 		//Add content panel to JFrame, resize JFrame and make it visible 
-		buttonListener();
+		buttonListener(temp);
 		this.frame.add(this.contentPanel);
 		this.frame.pack();
 		this.frame.setVisible(true);		
@@ -169,8 +159,10 @@ public final class GameGUI {
 	/* @constructor to continue game
 	 * @param name of winner and game
 	 */
-	public GameGUI(String winner, String game){
+	private GameGUI(String winner, String game){
 		System.out.println("Launching continue...");
+		this.maxComponents = 2;
+		this.continueGame = true;
 		
 		//Create JFrame and add close operation procedures
 		createFrame("Restart " + game + "?");
@@ -180,14 +172,13 @@ public final class GameGUI {
 		
 		checkContentPanel(
 			//TopPanel
-			addComponents(2, new JLabel("Continue playing " + game + "?", SwingConstants.CENTER)), 
+			addComponents(2, new JLabel("<html>Congratulation to winner: " + winner + "<br/>Continue playing " + game + "?</html>", SwingConstants.CENTER)), 
 			//MidPanel
-			addComponents(1, new JButton("Continue?"), this.quitButton = new JButton(this.QUIT)),
+			addComponents(1, createButton(this.QUIT, game)),
 			//BotPanel
 			false);
 		
 		//Add content panel to JFrame, resize JFrame and make it visible 
-		buttonListener();
 		this.frame.add(this.contentPanel);
 		this.frame.pack();
 		this.frame.setVisible(true);		
@@ -234,10 +225,10 @@ public final class GameGUI {
         this.gbc.insets = new Insets(0, 0, 2, 0);
         
         //Set border style: border line weight = 3; empty border padding = 10 all around
-		this.contentPanel.setBorder(new CompoundBorder(BorderFactory.createLineBorder(this.dark_gray, 3), BorderFactory.createEmptyBorder(10,10,10,10))); 
+		this.contentPanel.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 3), BorderFactory.createEmptyBorder(10,10,10,10))); 
 		
 		//Set background style: color light grey 
-		this.contentPanel.setBackground(this.light_gray);
+		this.contentPanel.setBackground(Color.LIGHT_GRAY);
 	}
 	
 	/* Check if Components is added into contentPanel
@@ -260,26 +251,47 @@ public final class GameGUI {
 	 * @param size of the Components, a list of Components to be added
 	 * @return if Components are added, a boolean
 	 */
-	private boolean addComponents(int gridWeight, Accessible...components) {
+	private boolean addComponents(int gridwidth, Accessible...components) {
 		int i = 0;
-		gbc.gridwidth = gridWeight;
+		
 		//If components are empty return false
 		if (components == null)
 			return false;
 		
 		//Loop through all components and add it to the contentPanel
 		for (Accessible comp: components) {			
-			gbc.gridx = i++ % this.MAX_X_COMPONENTS;  //Current column in the contentPanel		
-			gbc.gridy = this.gridy++ / this.MAX_X_COMPONENTS;  //Current row in the contentPanel
+			gbc.gridwidth = gridwidth;
+			gbc.gridx = (i++ % this.maxComponents);  //Current column in the contentPanel		
+			gbc.gridy = this.gridy++ / this.maxComponents;  //Current row in the contentPanel
 			this.contentPanel.add((Component) comp, this.gbc);
 		}
 
 		//Re-correct gridy so that it would be the next row
-		this.gridy = ((--this.gridy / this.MAX_X_COMPONENTS) + 1) * this.MAX_X_COMPONENTS;
+		this.gridy = ((--this.gridy / this.maxComponents) + 1) * this.maxComponents;
 		return true;
 	}
 	
 	//-------------------Components function------------------------------------------------------------------------------------------------------
+	/* Create player labels and store current players
+	 * @return list of player labels
+	 */
+	private JLabel[] createPlayerLabels() {
+		//Set player labels, list of current players, and current status
+		this.playerLabel = new JLabel[Board.maxPlayer];
+		GameGUI.players = new String[Board.maxPlayer];
+		this.statusText = STATUS + "Currently Player " + this.gameBoard.currentPlayer + " turn...";
+		
+		//Determine player names
+		for (int i = 0; i < this.playerLabel.length; ++i) {
+			if (i < 2)
+				GameGUI.players[i] = GameGUI.enterPlayer[i].getText();
+			else
+				GameGUI.players[i] = "Unnamed Player " + (i + 1);
+			this.playerLabel[i] = new JLabel("Player " + (i + 1) + ": " + GameGUI.players[i], SwingConstants.CENTER);			
+		}
+		return this.playerLabel;
+	}
+	
 	/* Create JButton Components
 	 * @param list of names for the JButton
 	 * @return an array of JButton
@@ -297,9 +309,9 @@ public final class GameGUI {
 		for (int i = 0; i < sizeButton; ++i) { 
 			this.gameButton[i] = new JButton(buttonLabels[i]);
 			this.gameButton[i].setPreferredSize(this.buttonDimension);		
+			buttonListener(this.gameButton[i]);
 		}
-		
-		buttonListener();	
+					
 		return this.gameButton;
 	}
 	
@@ -317,7 +329,7 @@ public final class GameGUI {
 		for (int i = 0; i < sizeLabel; ++i) {
 			GameGUI.highestScoreLabel[i] = new JLabel();
 		   	GameGUI.highestScoreLabel[i].setOpaque(true);
-	    	GameGUI.highestScoreLabel[i].setBackground(this.white);
+	    	GameGUI.highestScoreLabel[i].setBackground(Color.WHITE);
 	    	GameGUI.highestScoreLabel[i].setVerticalAlignment(JLabel.TOP);
 		}
 	}
@@ -334,7 +346,7 @@ public final class GameGUI {
 		int player, i = 0, sLen = 23;
 		
 		//Iterate through savedScores HashMap
-	    for (Map.Entry<String, HashMap<String, Integer>> gameList: Main.savedScores.entrySet()) { 
+	    for (Map.Entry<String, HashMap<String, Integer>> gameList: Main.savedScores.entrySet()) {
 	    	player = 0;
         	String temp = "<html>" + gameList.getKey() + "<br/>";
         	for (int j = 0; j < sLen; ++j)
@@ -345,14 +357,15 @@ public final class GameGUI {
         	for (Map.Entry<String, Integer> playerScores : gameList.getValue().entrySet()) {     
         		
         		//Print player name and score
-        		temp += "&nbsp;&nbsp;" + (player + 1) + ": " + playerScores.getKey() + "- ";
-        		temp += playerScores.getValue().toString() + "<br/>";
-        		player++;
+        		if (player++ < this.MAX_HIGHEST_PLAYER) {
+	        		temp += "&nbsp;&nbsp;" + (player) + ": " + playerScores.getKey() + " - ";
+	        		temp += playerScores.getValue().toString() + "<br/>";
+        		}
         	} 
         	
         	//Remaining players are blank
         	for (; player < this.MAX_HIGHEST_PLAYER; ++player)
-        		temp += "&nbsp;&nbsp;" + (player + 1) + ": _______" + ": __<br/>" ;
+        		temp += "&nbsp;&nbsp;" + (player + 1) + ": _______" + " - __<br/>" ;
         	temp += "</html>";        	
         	
         	//Set text of JLabel
@@ -375,34 +388,35 @@ public final class GameGUI {
 			@Override
 			public void paintComponent(Graphics g) {  
 				//Determine color of player; current player is blue
-				if (gameBoard.currentPlayer == 1) {
-					player[0].setForeground(blue);
-					player[1].setForeground(black);
-				}
-				else {
-					player[0].setForeground(black);
-					player[1].setForeground(blue);
-				}
+				for (int i = 0; i < playerLabel.length; ++i)
+					if (i == (gameBoard.currentPlayer - 1))
+						playerLabel[i].setForeground(Color.BLUE);
+					else
+						playerLabel[i].setForeground(Color.BLACK);
 				
 				//Set status label
 				statusLabel.setText(statusText);
 				super.paintComponent(g);    
-				setBackground(white);
-				g.setColor(dark_gray);	
+				setBackground(gameBoard.getColor());
+				g.setColor(Color.DARK_GRAY);	
 				
 				//Loop through the rows and cells
 				for (int row = 0; row < gameBoard.getRows(); ++row) {
 					for (int col = 0; col < gameBoard.getCols(); ++col) {
 						
 						//Alternate between cells and color them dark_gray
-						if ((row + col) % 2 == 0) 
-							g.fillRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
+						if (gameBoard.getPattern() == Pattern.CHECKERED) {
+							if ((row + col) % 2 == 0) 
+								g.fillRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);							
+						}
+						else if (gameBoard.getPattern() == Pattern.BLANK)
+							g.drawRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
 						
 						//If input is invalid, color that cell red 
 						if (invalidInput && selectedRow == row && selectedCol == col) {
-							g.setColor(red);
+							g.setColor(Color.RED);
 							g.fillRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
-							g.setColor(dark_gray);
+							g.setColor(Color.DARK_GRAY);
 						}
 						
 						//If there is a piece in the game board, add the piece icon
@@ -413,9 +427,9 @@ public final class GameGUI {
 								//Pull icon path from Piece object
 								image = ImageIO.read(new File(gameBoard.getGridPieces()[row][col].getIcons(gameBoard.getGridPieces()[row][col].player)));						
 							} 
-							catch (IOException e) {
+							catch (IOException | ArrayIndexOutOfBoundsException e) {
 								//Alternative image is used if not is found
-								try {image = ImageIO.read(new File(defaultIcon[gameBoard.getGridPieces()[row][col].player]));}
+								try {image = ImageIO.read(new File(defaultIcon[(gameBoard.getGridPieces()[row][col].player - 1) % defaultIcon.length]));}
 								catch (IOException ex) {/*do nothing*/}
 							}
 							finally {
@@ -442,71 +456,57 @@ public final class GameGUI {
 		mouseListener();
 		return this.gamePanel;
 	}
+	
 	//--------------Button/Action Listener-----------------------------------------------------------------------------------------------
 	/* Action listener for when JButton is pressed
+	 * @param button to be added with listener
 	 */
-	private void buttonListener() {
+	private void buttonListener(JButton jButton) {
 		
-		//Handle when Quit Game JButton is pressed, close JFrame and game
-		if (this.quitButton != null) {	
-			this.quitButton.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent source) {
+		jButton.addActionListener(new ActionListener() {				
+			@Override
+			public void actionPerformed(ActionEvent source) {
+				//Handle when Quit Game JButton is pressed, close JFrame and game
+				if (((JButton) source.getSource()).getActionCommand().equals(QUIT)) {
 					System.out.println("Quit Game...");	
 					frame.dispose();
 					terminateGUI();
 				}
-			});
-		}
-		
-		//Handle when game is selected in Game Launcher
-		else {			
-			for (int i = 0; i < this.gameButton.length; ++i) {
-				this.gameButton[i].addActionListener(new ActionListener()
-				{
-					
-					@Override
-					public void actionPerformed(ActionEvent source) {
-						//Make sure there is something entered in the player 1 and 2 JTextField
-						if (!enterPlayer[0].getText().isEmpty() && !enterPlayer[1].getText().isEmpty()) {
-							
-							//Lock JTextField
-							enterPlayer[2].setEditable(false);
-							enterPlayer[1].setEditable(false);
-							
-							//Set name of player 1 and 2
-							Main.playerOne = enterPlayer[0].getText();
-							Main.playerTwo = enterPlayer[1].getText();
-							
-							//Get name of JButton
-							gameSelected =((JButton) source.getSource()).getActionCommand();
-							
-							try {
-								
-								//Attempt to instantiate game object
-								//As long as the package and class (implemented GameFactory) is the same, a game object should be made
-								Class gameClass = Class.forName("GameEnvironment.Game." + gameSelected.toString() + "." + gameSelected.toString());
-								gameClass.newInstance();					
-							} 
-							
-							//Fail to create game object
-							catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-								System.out.println(gameSelected + ".java and package could not be found!");							
-							}
-						}
+				
+				//Handle when game button is selected
+				else {
+					if (!GameGUI.enterPlayer[0].getText().isEmpty() && !GameGUI.enterPlayer[1].getText().isEmpty()) {
 						
-						else {
-							System.out.println("Player One or Player Two text field is empty.");	
+						//Lock JTextField
+						enterPlayer[0].setEditable(false);
+						enterPlayer[1].setEditable(false);
+						
+						//Get name of JButton
+						gameSelected =((JButton) source.getSource()).getActionCommand();
+						
+						try {
+							
+							//Attempt to instantiate game object
+							//As long as the package and class (implemented GameFactory) is the same, a game object should be made
+							Class<?> gameClass = Class.forName("GameEnvironment.Game." + gameSelected.toString() + "." + gameSelected.toString());
+							gameClass.newInstance();	
+							
+							if (continueGame)
+								frame.dispose();
+						} 
+						
+						//Fail to create game object
+						catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+							System.out.println(gameSelected + ".java and package could not be found!");							
 						}
-
-		//				
-		//				resetSavedGameLabel();
-			//				contentPanel.revalidate();				
 					}
-				});
+					
+					else {
+						System.out.println("Player One or Player Two text field is empty.");	
+					}
+				}
 			}
-		}
+		});
 	}
 	
 	/* Add mouseListener to gamePanel
@@ -521,16 +521,32 @@ public final class GameGUI {
 				selectedRow = e.getY() / cellHeight;
 				
 				//If move is valid, add piece to game board, increment to next player and change status
-				if (gameBoard.validMove(selectedRow, selectedCol)) {
+				if (gameBoard.isMoveValid(selectedRow, selectedCol)) {
 					invalidInput = false;
 					
+					//If game reach end state
 					if (gameBoard.endGame()) {
-						new GameGUI("Bob", gameSelected.toString());
+						
+						//Call to update game scores after game ends. Winning player is last, current player
+						//Sort savedScores HashMap and reprint highestScoreLabel
+						//Close game JFrame and open continue prompt
+						Main.addScore(gameSelected, GameGUI.players[gameBoard.currentPlayer - 1], gameBoard.calculateScore());
+						Main.sortSavedScores(gameSelected);
+						resetSavedGameLabel();
+						frame.dispose();
+						new GameGUI(GameGUI.players[gameBoard.currentPlayer - 1], gameSelected);
 					}
 					
+					//If game ended in a draw, close game JFrame and open continue prompt
+					else if (gameBoard.isGameTied()) {
+						frame.dispose();
+						new GameGUI("TIED GAME", gameSelected);
+					}
+					
+					//Else, game continues with next player
 					else {						
 						gameBoard.nextPlayer();
-						statusText = STATUS + "Currently Player " + gameBoard.currentPlayer + " turn";		
+						statusText = STATUS + "Currently Player " + gameBoard.currentPlayer + " turn...";		
 					}
 				}	
 				
@@ -540,7 +556,7 @@ public final class GameGUI {
 					statusText = STATUS + "Invalid Input";
 				}
 				
-				//Repaint game panel paintcomponents
+				//Repaint game panel paintComponents
 				gamePanel.repaint();
 			}
 		});
@@ -556,7 +572,7 @@ public final class GameGUI {
 		this.contentPanel = null;
 		this.gbc = null;
 		this.gameButton = null;	
-		this.enterPlayer = null;
+		GameGUI.players = null;
 	}	
 	
 	/* Print out gridPieces from game board; used for debugging

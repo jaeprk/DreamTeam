@@ -1,6 +1,6 @@
 package GameEnvironment.Game.TicTacToe;
 
-import javafx.scene.paint.Color;
+import java.awt.Color;
 
 import GameEnvironment.Board;
 import GameEnvironment.GameFactory;
@@ -37,7 +37,7 @@ public class TicTacToe implements GameFactory {
 	 */
 	@Override
 	public Board buildBoard() {
-		return new TicTacToeBoard(3, 3, 2, Interaction.BOARD, buildPieces());
+		return new TicTacToeBoard(3, 3, 4, Interaction.BOARD, buildPieces());
 	}
 	
 	/* Create a TicTacToePiece object

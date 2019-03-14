@@ -150,6 +150,13 @@ public class ReversiBoard extends Board{
 		// TODO Auto-generated method stub
 		
 	}
+
+	
+	@Override
+	public boolean isGameTied() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	private int leftDirection(int r, int c){
 		int i = c-1;
@@ -433,11 +440,5 @@ public class ReversiBoard extends Board{
 	
 	private void resetLock(){
 		lock = false;
-	}
-	
-	@Override
-	public boolean isGameTied() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

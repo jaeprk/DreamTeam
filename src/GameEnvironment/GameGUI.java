@@ -284,7 +284,7 @@ public final class GameGUI {
 			if (i < 2)
 				GameGUI.players[i] = GameGUI.enterPlayer[i].getText();
 			else
-				GameGUI.players[i] = "Unnamed Player " + (i + 1);
+				GameGUI.players[i] = "Who TF " + (i + 1);
 			this.playerLabel[i] = new JLabel("Player " + (i + 1) + ": " + GameGUI.players[i], SwingConstants.CENTER);			
 		}
 		return this.playerLabel;

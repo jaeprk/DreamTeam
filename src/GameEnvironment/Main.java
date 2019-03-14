@@ -15,6 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import GameEnvironment.Game.TicTacToe.TicTacToe;
+
 import static java.util.stream.Collectors.*;
 
 /* Main.java class for: 

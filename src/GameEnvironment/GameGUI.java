@@ -8,7 +8,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Stroke;
@@ -43,7 +42,7 @@ public final class GameGUI {
 	private String[] gameList;   //List of games name
 	String gameSelected;  //Game selected
 	
-	private JFrame frame;   //JFrame being used	
+	private JFrame frame, lastGameFrame;   //JFrame being used	
 	private JPanel contentPanel, gamePanel;   //Primary content/background panel; panel to play game on
 	private GridBagConstraints gbc;  //Constraints used for the GridBagLayout
 	private JButton[] gameButton;   //List of game buttons	
@@ -63,8 +62,8 @@ public final class GameGUI {
 	private boolean continueGame;  //Determine if GUI is continue prompt
 	
 	//-----------default pieces icon-----------------------------------------------------------------------------------------------------------------
-	private final String iconDirectory = Main.GAME_ENVIR_DIRECTORY + "PlayerIcon/";
-	private final String[] defaultIcon = {iconDirectory + "player1.png", 
+	private final String iconDirectory = Main.GAME_ENVIR_DIRECTORY + "PlayerIcon/";  //Default image directory
+	private final String[] defaultIcon = {iconDirectory + "player1.png",  
 			                              iconDirectory + "player2.png", 
 			                              iconDirectory + "player3.png", 
 			                              iconDirectory + "player4.png",
@@ -75,7 +74,7 @@ public final class GameGUI {
 										  iconDirectory + "player1alt2.png", 
 										  iconDirectory + "player2alt2.png", 
 										  iconDirectory + "player3alt2.png", 
-										  iconDirectory + "player4alt2.png"};
+										  iconDirectory + "player4alt2.png"};  //File name of default images
 	
 	//------------static global variable, used by package---------------------------------------------------------------------------------------------
 	static JLabel[] highestScoreLabel;  //Label for highest scores per game
@@ -151,14 +150,16 @@ public final class GameGUI {
 		buttonListener(temp);
 		this.frame.add(this.contentPanel);
 		this.frame.pack();
+		this.frame.setLocationRelativeTo(null);
 		this.frame.setVisible(true);		
 	}
 	
 	/* @constructor to continue game
 	 * @param name of winner and game
 	 */
-	private GameGUI(String winner, String game){
+	private GameGUI(String winner, String game, JFrame lastGameFrame){
 		System.out.println("Launching continue...");
+		this.lastGameFrame = lastGameFrame;
 		this.maxComponents = 2;
 		this.continueGame = true;
 		
@@ -178,6 +179,7 @@ public final class GameGUI {
 		
 		//Add content panel to JFrame, resize JFrame and make it visible 
 		this.frame.add(this.contentPanel);
+		this.frame.setLocationRelativeTo(null);
 		this.frame.pack();
 		this.frame.setVisible(true);		
 	}
@@ -324,6 +326,7 @@ public final class GameGUI {
 		int sizeLabel = Main.savedScores.size();
 		GameGUI.highestScoreLabel = new JLabel[sizeLabel];	
 		
+		//Create game JLabels with settings
 		for (int i = 0; i < sizeLabel; ++i) {
 			GameGUI.highestScoreLabel[i] = new JLabel();
 		   	GameGUI.highestScoreLabel[i].setOpaque(true);
@@ -354,7 +357,7 @@ public final class GameGUI {
         	//Iterate through player and score HashMap
         	for (Map.Entry<String, Integer> playerScores : gameList.getValue().entrySet()) {     
         		
-        		//Print player name and score
+        		//Concat player name and score to string
         		if (player++ < this.MAX_HIGHEST_PLAYER) {
 	        		temp += "&nbsp;&nbsp;" + (player) + ": " + playerScores.getKey() + " - ";
 	        		temp += playerScores.getValue().toString() + "<br/>";
@@ -366,7 +369,7 @@ public final class GameGUI {
         		temp += "&nbsp;&nbsp;" + (player + 1) + ": _______" + " - __<br/>" ;
         	temp += "</html>";        	
         	
-        	//Set text of JLabel
+        	//Set text of game JLabel
         	GameGUI.highestScoreLabel[i++].setText(temp);        	
 		}
 	}
@@ -402,13 +405,30 @@ public final class GameGUI {
 				for (int row = 0; row < gameBoard.getRows(); ++row) {
 					for (int col = 0; col < gameBoard.getCols(); ++col) {
 						
-						//Alternate between cells and color them dark_gray
+						//Alternate between cells and color them dark_gray for checkered board
 						if (gameBoard.getPattern() == Pattern.CHECKERED) {
 							if ((row + col) % 2 == 0) 
 								g.fillRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);							
 						}
+						
+						//For blank board, make a grid system
 						else if (gameBoard.getPattern() == Pattern.BLANK)
 							g.drawRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
+						
+						//For blanked_line board, make a grid system with a line dividing in the middle
+						else if (gameBoard.getPattern() == Pattern.BLANKED_LINE) {
+							g.drawRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
+							
+							//Add a line through the middle of the grid
+							g.setColor(Color.RED);
+							Graphics2D g2 = (Graphics2D) g;
+							double thickness = 4;
+							Stroke oldStroke = g2.getStroke();
+							g2.setStroke(new BasicStroke((float) thickness));
+							g.drawLine((gameBoard.getCols()/2) * cellWidth, 0, (gameBoard.getCols()/2) * cellWidth, gameBoard.getRows() * cellHeight);
+							g2.setStroke(oldStroke);
+							g.setColor(Color.DARK_GRAY);
+						}
 						
 						//If input is invalid, color that cell red 
 						if (invalidInput && selectedRow == row && selectedCol == col) {
@@ -416,10 +436,6 @@ public final class GameGUI {
 							g.fillRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
 							g.setColor(Color.DARK_GRAY);
 						}
-						
-						
-						
-						
 						
 						//If there is a piece in the game board, add the piece icon
 						if (gameBoard.getGridPieces()[row][col] != null) {
@@ -458,7 +474,7 @@ public final class GameGUI {
 					for (Point coord: gameBoard.getAvailableMoves())
 						g2.drawRect(coord.y * cellWidth, coord.x * cellHeight, cellWidth, cellHeight);
 					g2.setStroke(oldStroke);		
-				}			
+				}				
 			}
 		}; 
 		
@@ -480,6 +496,10 @@ public final class GameGUI {
 				//Handle when Quit Game JButton is pressed, close JFrame and game
 				if (((JButton) source.getSource()).getActionCommand().equals(QUIT)) {
 					System.out.println("Quit Game...");	
+					
+					//If continue game GUI is open, terminate old game
+					if (lastGameFrame != null)
+						lastGameFrame.dispose();
 					frame.dispose();
 					terminateGUI();
 				}
@@ -502,8 +522,12 @@ public final class GameGUI {
 							Class<?> gameClass = Class.forName("GameEnvironment.Game." + gameSelected.toString() + "." + gameSelected.toString());
 							gameClass.newInstance();	
 							
-							if (continueGame)
+							//If continue game GUI is open, terminate old game
+							if (continueGame) {
+								if (lastGameFrame != null)
+									lastGameFrame.dispose();
 								frame.dispose();
+							}
 						} 
 						
 						//Fail to create game object
@@ -512,6 +536,7 @@ public final class GameGUI {
 						}
 					}
 					
+					//If player field has not been added
 					else {
 						System.out.println("Player One or Player Two text field is empty.");	
 					}
@@ -541,17 +566,19 @@ public final class GameGUI {
 						//Call to update game scores after game ends. Winning player is last, current player
 						//Sort savedScores HashMap and reprint highestScoreLabel
 						//Close game JFrame and open continue prompt
+						//Remove mouseListener
 						Main.addScore(gameSelected, GameGUI.players[gameBoard.currentPlayer - 1], gameBoard.calculateScore());
 						Main.sortSavedScores(gameSelected);
 						resetSavedGameLabel();
-						frame.dispose();
-						new GameGUI(GameGUI.players[gameBoard.currentPlayer - 1], gameSelected);
+						new GameGUI(GameGUI.players[gameBoard.currentPlayer - 1], gameSelected, frame);	
+						((Component) e.getSource()).removeMouseListener(this);
 					}
 					
 					//If game ended in a draw, close game JFrame and open continue prompt
+					//Remove mouseListener
 					else if (gameBoard.isGameTied()) {
-						frame.dispose();
-						new GameGUI("TIED GAME", gameSelected);
+						new GameGUI("TIED GAME", gameSelected, frame);	
+						((Component) e.getSource()).removeMouseListener(this);
 					}
 					
 					//Else, game continues with next player
@@ -590,5 +617,12 @@ public final class GameGUI {
 	 */
 	private void printBoard() {
 		System.out.println(Arrays.deepToString(this.gameBoard.getGridPieces()));
+	}
+	
+	/* Allow games with difference instances to control when a frame need to be manipulated outside of GameGUI
+	 * @return JFrame
+	 */
+	public JFrame getFrame() {
+		return this.frame;
 	}
 }

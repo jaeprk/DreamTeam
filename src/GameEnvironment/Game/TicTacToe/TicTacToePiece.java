@@ -10,8 +10,8 @@ import GameEnvironment.Piece;
  * Build the TicTacToe piece logic
  */
 public class TicTacToePiece extends Piece{
-	private static final String gameFolder = System.getProperty("user.dir") + "/src/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";  //Folder of TicTacToe assets
-	private final String[] pieceIcon = {gameFolder + "X.png", gameFolder + "O.png"};  //Assets image for each pieces
+	private final String GAME_FOLDER = System.getProperty("user.dir") + "/src/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";  //Folder of TicTacToe assets
+	private final String[] PIECE_ICON = {this.GAME_FOLDER + "X.png", this.GAME_FOLDER + "O.png"};  //Assets image for each pieces
 	
 	/* Constructor for Piece
 	 * @param name of piece (used for debugging), player the piece belong to
@@ -21,7 +21,7 @@ public class TicTacToePiece extends Piece{
 	}
 	
 	/* A HashMap(row, col) of all available moves that the Piece can make; used for nextMove() in Board 
-	 * @return available moves; if Piece have no predetermined moves, return null
+	 * @return available moves; if Piece have no predetermined moves, return empty ArrayList if all are allowed
 	 */
 	@Override
 	public List<Point> getMoves() {
@@ -34,7 +34,7 @@ public class TicTacToePiece extends Piece{
 	 */
 	@Override
 	public String getIcons(int player) {
-		return pieceIcon[player - 1];
+		return this.PIECE_ICON[player - 1];
 	}	
 }
 

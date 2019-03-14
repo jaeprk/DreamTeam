@@ -52,7 +52,7 @@ class TicTacToeBoard extends Board {
 	}
 	
 	/* Return current player's next available move if there is a predefined set of moves
-	 * @return HashMap of row and col coordinates; return null if all empty spaces are allow 
+	 * @return HashMap of row and col coordinates; return empty ArrayList if all are allowed
 	 */
 	@Override
 	public List<Point> getAvailableMoves() {

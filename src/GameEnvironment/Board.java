@@ -23,7 +23,8 @@ public abstract class Board {
 	static int maxPlayer; //Max number of players
 	protected int currentPlayer; //Current player number
 	
-	/* User must supply the size of the board, maximum number of player, pattern and interaction of board
+	/* Constructor without changes to background
+	/* User must supply the size of the board, maximum number of player, interaction of board, and a piece of the board
 	 * Rows and cols used to instantiate gridPieces;
 	 */
 	protected Board(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece) {
@@ -37,6 +38,10 @@ public abstract class Board {
 		this.color = Color.WHITE;
 	}
 	
+	/* Constructor with changes to background
+	/* User must supply the size of the board, maximum number of player, interaction of board, a piece of the board, board pattern, and board color
+	 * Rows and cols used to instantiate gridPieces;
+	 */
 	protected Board(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece, Pattern pattern, Color color) {
 		this(rows, cols, maxPlayer, interaction, currentPiece);
 		this.pattern = pattern;

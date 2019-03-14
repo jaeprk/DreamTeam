@@ -9,7 +9,7 @@ import java.util.List;
  *   - Store String[] of piece icon for each player
  */
 public abstract class Piece { 
-	String pieceName; //Used for debugging purposes
+	protected String pieceName; //Used for debugging purposes
 	protected int player; //Piece belong with which player
 	
 	//Requires the pieceName (could be left as blank) and which player does the piece belong to

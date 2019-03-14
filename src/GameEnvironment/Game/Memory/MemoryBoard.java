@@ -1,6 +1,7 @@
 package GameEnvironment.Game.Memory;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 
 import GameEnvironment.Board;
@@ -11,11 +12,33 @@ class MemoryBoard extends Board {
 
 	protected MemoryBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece) {
 		super(rows, cols, maxPlayer, interaction, currentPiece);
+		
+		int count = 0; 
+		ArrayList<Integer> h = new ArrayList<Integer>();
+		while (count < 32) {
+			int intToAdd = (int)(Math.random() * ((31 - 0) + 1)) + 0;
+			System.out.println(intToAdd);
+			if (!h.contains(intToAdd)) {
+				h.add(intToAdd);
+				count++;
+			} else {
+				continue;
+			}
+		}
+		System.out.println("===Contents of array===");
+		for (int k = 0; k < count; ++k) {
+			System.out.println(h.get(k));
+		}
+		for (int i = 0; i < rows; ++i) {
+			for (int j = 0; j < cols; ++j) {
+				super.updateGrid(i, j, new MemoryPiece("", super.currentPlayer));	
+			}
+		}
 	}
 
 	@Override
 	public void startGame() {
-		super.currentPlayer = 1;
+		super.currentPlayer = 0;
 	}
 
 
@@ -47,8 +70,7 @@ class MemoryBoard extends Board {
 
 	@Override
 	public List<Point> getAvailableMoves() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<Point>();
 	}
 
 	@Override

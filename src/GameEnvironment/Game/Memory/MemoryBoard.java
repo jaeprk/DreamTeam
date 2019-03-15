@@ -2,6 +2,8 @@ package GameEnvironment.Game.Memory;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import GameEnvironment.Board;
@@ -13,31 +15,44 @@ class MemoryBoard extends Board {
 	protected MemoryBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece) {
 		super(rows, cols, maxPlayer, interaction, currentPiece);
 		
-		int count = 0; 
-		ArrayList<Integer> h = new ArrayList<Integer>();
+		ArrayList<Integer> firstHalf = new ArrayList<Integer>();
+		ArrayList<Integer> secondHalf = new ArrayList<Integer>();
 		
-		while (count < 32) {
-			int intToAdd = (int)(Math.random() * ((32 - 1) + 1)) + 1;
-			System.out.println(intToAdd);
-			if (!h.contains(intToAdd)) {
-				h.add(intToAdd);
-				count++;
-			} else {
-				continue;
-			}
+		for (int i = 1; i < 33; ++i) {
+			firstHalf.add(i);
 		}
-		System.out.println("===Contents of array===");
-		for (int k = 0; k < count; ++k) {
-			System.out.println(h.get(k));
+		
+		for (int i = 1; i < 33; ++i) {
+			secondHalf.add(i);
 		}
-
+		
+		Collections.shuffle(firstHalf);
+		Collections.shuffle(secondHalf);
+			
+	
+		System.out.println("===Contents of 1===");
+		for (Integer k : firstHalf) {
+			System.out.println(k);
+		}
+		System.out.println("===Contents of 2===");
+		for (Integer k : secondHalf) {
+			System.out.println(k);
+		}
+		
+		int swap = 0;
+		int first_counter = 0;
+		int second_counter = 0;
 		for (int i = 0; i < rows; ++i) {
 			for (int j = 0; j < cols; ++j) {
-				int intToAdd = (int)(Math.random() * 32) + 1;
-				
-					super.updateGrid(i, j, new MemoryPiece("", intToAdd));
+				if (swap >= 32) {
+					super.updateGrid(i, j, new MemoryPiece("", secondHalf.get(second_counter)));
+					second_counter++;
+				} else {
+					super.updateGrid(i, j, new MemoryPiece("", firstHalf.get(first_counter)));
+					first_counter++;
+					swap++;
+				}
 			}
-				
 		}
 	}
 

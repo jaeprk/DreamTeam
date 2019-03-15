@@ -15,6 +15,7 @@ class MemoryBoard extends Board {
 		
 		int count = 0; 
 		ArrayList<Integer> h = new ArrayList<Integer>();
+		
 		while (count < 32) {
 			int intToAdd = (int)(Math.random() * ((31 - 0) + 1)) + 0;
 			System.out.println(intToAdd);
@@ -29,9 +30,11 @@ class MemoryBoard extends Board {
 		for (int k = 0; k < count; ++k) {
 			System.out.println(h.get(k));
 		}
+
 		for (int i = 0; i < rows; ++i) {
 			for (int j = 0; j < cols; ++j) {
-				super.updateGrid(i, j, new MemoryPiece("", super.currentPlayer));	
+				int intToAdd = (int)(Math.random() * ((32 - 1) + 1)) + 1;
+				super.updateGrid(i, j, new MemoryPiece("", intToAdd));
 			}
 		}
 	}

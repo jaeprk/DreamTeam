@@ -18,6 +18,10 @@ import GameEnvironment.Game.TicTacToe.TicTacToePiece;
 class MemoryBoard extends Board 
 {
 	private MemoryPiece[][] gridPieces = new MemoryPiece[100][100]; //matrix for holding randomized pieces
+	int player1Last = 0;
+	int player2Last = 0;
+	boolean player1Selecting = false;
+	boolean player2Selecting = false;
 	
 	protected MemoryBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece) 
 	{
@@ -70,7 +74,7 @@ class MemoryBoard extends Board
 	@Override
 	public void startGame() 
 	{
-		super.currentPlayer = 0;
+		super.currentPlayer = 1;
 	}
 
 
@@ -108,8 +112,15 @@ class MemoryBoard extends Board
 	@Override
 	public boolean isMoveValid(int row, int col)
 	{
+		if (super.getCurrentPlayer() == 1) {
+			System.out.println("Recalled, player1Last: " + player1Last);
+		} else {
+			System.out.println("Recalled, player2Last: " + player2Last);
+		}
+		
 		//Reveal piece if clicked piece is null(unflipped)
-		if (gridPieces[row][col] != null) 
+		
+	    if (gridPieces[row][col] != null) 
 		{
 			//temp MemoryPiece
 			MemoryPiece p;
@@ -119,18 +130,40 @@ class MemoryBoard extends Board
 			//reveal the piece
 			super.updateGrid(row, col, gridPieces[row][col]);
 			
-			gridPieces[row][col] = null;
-			
 			//Update current piece
 			super.currentPiece = gridPieces[row][col];
 			
-			//Make null to make sure player cannot choose the same piece again.
-			//gridPieces[row][col] = null;
+			if (player1Selecting) {
+				super.nextPlayer();
+				int current = ((MemoryPiece) (super.currentPiece)).getPiece();
+				System.out.println("Current piece: " + current + "vs. last: " + player1Last);
+				System.out.println("This piece was turned over by: " + super.getCurrentPlayer());
+				if (current == player1Last) {
+					System.out.println("It's a match");
+					return true;
+				} else {
+					System.out.println("Flipping back over...");
+				}
+			}
 			
+			if (super.getCurrentPlayer() == 1 && !player1Selecting) {
+				player1Last = ((MemoryPiece) (super.currentPiece)).getPiece();
+				gridPieces[row][col] = null;
+				player1Selecting = true;
+				
+				return true;
+			}
+		    
+			//System.out.println("Current piece: " + ((MemoryPiece) (super.currentPiece)).getPiece() + " turned over by player: " + super.getCurrentPlayer());
+			
+			//Make null to make sure player cannot choose the same piece again.
+			gridPieces[row][col] = null;
+			
+			/*
 			//if next click equals first click
 			if ( super.currentPiece == gridPieces[row][col] )
 			{
-				/*
+				
 				//keep second revealed
 				gridPieces[row][col] = p;
 				super.updateGrid(row, col, gridPieces[row][col]);
@@ -141,11 +174,11 @@ class MemoryBoard extends Board
 				super.updateGrid(row2, col2, gridPieces[row2][col2]);
 				//make it visited
 				gridPieces[row2][col2] = null;
-				*/
+				
 				
 				
 			}
-			/*
+			
 			else (gridPieces[row2][col2] != gridPieces[row][col])
 			{
 				//Flip piece back down
@@ -155,7 +188,6 @@ class MemoryBoard extends Board
 				gridPieces[row][col] = p;
 			}
 			*/
-		
 			return true;
 		}
 		return false;
@@ -174,4 +206,7 @@ class MemoryBoard extends Board
 		return false;
 	}
 
+	public void flipPiece(int row, int col) {
+		
+	}
 }

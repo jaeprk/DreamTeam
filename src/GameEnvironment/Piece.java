@@ -10,7 +10,7 @@ import java.util.List;
  */
 public abstract class Piece { 
 	String pieceName; //Used for debugging purposes
-	int player; //Piece belong with which player
+	protected int player; //Piece belong with which player
 	
 	//Requires the pieceName (could be left as blank) and which player does the piece belong to
 	protected Piece(String pieceName, int player) {

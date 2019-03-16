@@ -18,11 +18,11 @@ public class CheckersPiece extends Piece{
 		moves =  new ArrayList<Point>();
 		if(super.playerNumber() == 1) {
 			this.moves.add(new Point(-1, -1));
-			this.moves.add(new Point(1, -1));				
+			this.moves.add(new Point(-1, 1));				
 		}
 		if(super.playerNumber() == 2) {
 			this.moves.add(new Point(1, 1));
-			this.moves.add(new Point(-1, 1));
+			this.moves.add(new Point(1, -1));
 		}
 		this.king = false;
 	}
@@ -38,11 +38,11 @@ public class CheckersPiece extends Piece{
 	public void promote() {
 		if(super.playerNumber() == 1) {
 			this.moves.add(new Point(1, 1));
-			this.moves.add(new Point(-1, 1));
+			this.moves.add(new Point(1, -1));
 		}
 		if(super.playerNumber() == 2) {
 			this.moves.add(new Point(-1, -1));
-			this.moves.add(new Point(1, -1));
+			this.moves.add(new Point(-1, 1));
 		}
 		this.king = true;
 		return;

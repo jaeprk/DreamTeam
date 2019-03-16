@@ -19,13 +19,12 @@ public class Checkers implements GameFactory{
 
 	@Override
 	public Board buildBoard() {
-		//??
 		return new CheckersBoard(8, 8, 2, Interaction.BOARD, buildPieces());
 	}
 
 	@Override
 	public Piece buildPieces() {
-		return new CheckersPiece("", 1); //what???
+		return null;
 	}
 	
 	

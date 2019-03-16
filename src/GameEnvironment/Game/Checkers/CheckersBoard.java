@@ -11,18 +11,22 @@ import GameEnvironment.Piece;
 public class CheckersBoard extends Board{
 	
 	Point currentPieceLocation;
+	boolean pieceSelected;
+	boolean combo;
 	
 	protected CheckersBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece) {
 		super(rows, cols, maxPlayer, interaction, currentPiece);
 		this.currentPieceLocation = null;
+		this.pieceSelected = false;
+		this.combo = false;
 	}
 
 	@Override
 	public void startGame() {
-		for(int i=0; i<8; ++i) {
+		for(int i=0; i < getRows(); ++i) {
 			if (i != 3 && i != 4) {
-				for(int j=0; j<8; ++j) {
-					CheckersPiece piece = new CheckersPiece(i<3?"black":"white",i<3?1:2);
+				for(int j=0; j < getCols(); ++j) {
+					CheckersPiece piece = new CheckersPiece(i<3?"black":"red",i<3?2:1);
 					if(i%2 == 0 && j%2 == 0)
 						this.updateGrid(i, j, piece);
 					if(i%2 != 0 && j%2 != 0) {
@@ -52,21 +56,53 @@ public class CheckersBoard extends Board{
 	
 	@Override
 	protected void nextPlayer() {
-		
-		
+		if(!this.pieceSelected) {
+			if(++this.currentPlayer > 2)
+				this.currentPlayer = 1;
+		}
 	}
+		
 
 	@Override
 	public boolean isMoveValid(int row, int col) {
-		if(getGridPieces()[row][col] != null) {
-			this.currentPiece = getGridPieces()[row][col];
-			if(this.currentPiece.playerNumber() == this.currentPlayer) {
+		List<Point> availableMoves = getAvailableMoves();
+		Point move =  new Point(row,col);
+		if(availableMoves.contains(move)) {
+			if(this.pieceSelected) {
+				List<Point> c = getCaptures(this.currentPieceLocation.x, this.currentPieceLocation.y, this.currentPiece);
+				updateGrid(row, col, this.currentPiece);
+				updateGrid(currentPieceLocation.x, currentPieceLocation.y, null);
+				promotePiece(row, (CheckersPiece) this.currentPiece);
+				this.pieceSelected = false;
+				this.combo = false;
+				if(c.contains(move)) {					
+					int x;
+					int y;
+					List<Point> pMoves = currentPiece.getMoves();
+					for(int i = 0; i < pMoves.size(); i++) {
+						x = currentPieceLocation.x + pMoves.get(i).x;
+						y = currentPieceLocation.y + pMoves.get(i).y;
+						if((x + pMoves.get(i).x) == row && (y + pMoves.get(i).y) == col) {
+							//subtract points for other player here
+							//check the piece's .playerNumber() and subtract their score.
+							updateGrid(x, y, null);
+						}
+					}
+					if(!(getCaptures(row, col, this.currentPiece).isEmpty())) {
+						this.combo = true;
+						this.pieceSelected = true;
+						this.currentPiece = getGridPieces()[row][col];
+						this.currentPieceLocation = new Point(row, col);
+					}
+				}
+				return true;
+			}
+			if(!this.pieceSelected) {
+				this.pieceSelected = true;
+				this.currentPiece = getGridPieces()[row][col];
 				this.currentPieceLocation = new Point(row, col);
 				return true;
 			}
-		}
-		if(getGridPieces()[row][col] == null && this.currentPieceLocation != null) {
-			
 		}
 		return false;
 	}
@@ -74,54 +110,97 @@ public class CheckersBoard extends Board{
 	@Override
 	public List<Point> getAvailableMoves() {
 		List<Point> availableMoves = new ArrayList<Point>();
-		for(int i=0; i<8; ++i)
-			for(int j=0; j<8; ++j)
-				if(super.getGridPieces()[i][j]==null)
-					if(isMoveValid(i,j))
-						availableMoves.add(new Point(i,j));
-		return availableMoves;
+		if(!this.pieceSelected) {
+			for(int x = 0; x < getRows(); x++) {
+				for(int y = 0; y < getCols(); y++) {
+					if(getGridPieces()[x][y] != null && 
+					   getGridPieces()[x][y].playerNumber() == this.currentPlayer &&
+					   hasMoves(x, y, getGridPieces()[x][y])){
+						availableMoves.add(new Point(x,y));
+					}			
+				}
+			} 
+		}
 		
-//		List<Point> moves = currentPiece.getMoves();
-//		List<Point> availableMoves = new ArrayList<Point>();
-//		Point nextMove;
-//		
-//		if(this.currentPieceLocation == null) {
-//			for(int x = 0; x <= 7; x++) {
-//				for(int y = 0; y <= 7; y++) {
-//					// DEBUG : temporary pass
-//					if(getGridPieces()[x][y] == null)
-//						break;
-//					if(getGridPieces()[x][y].playerNumber() == this.currentPlayer) {
-//						availableMoves.add(new Point(x,y));
-//					}		
-//				}
-//			}
-//		}
-//		else {
-//		for(int i = 0; i < moves.size(); i++) {
-//			Point currentCell = moves.get(i);
-//			nextMove = new Point (this.currentPieceLocation.x + currentCell.x,
-//								  this.currentPieceLocation.y + currentCell.y);
-//			if(getGridPieces()[nextMove.x][nextMove.y] == null &&
-//				nextMove.x > 0 && nextMove.x < 8 &&
-//				nextMove.y > 0 && nextMove.y < 8){
-//				availableMoves.add(nextMove);
-//			}
-//			if(getGridPieces()[nextMove.x][nextMove.y] != null &&
-//			   getGridPieces()[nextMove.x][nextMove.y].playerNumber() != this.currentPlayer &&
-//			   getGridPieces()[nextMove.x + currentCell.x][nextMove.y + currentCell.y] == null) {
-//				availableMoves.add(nextMove);		
-//			}
-//		}
-//		}
-//		return new ArrayList<Point>();
+		if(this.pieceSelected && !combo) {
+			availableMoves.addAll(getCaptures(this.currentPieceLocation.x, this.currentPieceLocation.y, this.currentPiece));
+			availableMoves.addAll(getMoves(this.currentPieceLocation.x, this.currentPieceLocation.y, this.currentPiece));
+		}
+		if(combo) {
+			availableMoves.addAll(getCaptures(this.currentPieceLocation.x, this.currentPieceLocation.y, this.currentPiece));
+		}
+		
+		return availableMoves;	
 	}
+
 
 	@Override
 	public boolean isGameTied() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 	
+	public boolean hasMoves(int row, int col, Piece p) {
+		return (!(getCaptures(row, col, p).isEmpty()) || !(getMoves(row, col, p).isEmpty()));
+	}
+	
+	public List<Point> getCaptures(int row, int col, Piece p){
+		List<Point> captures = new ArrayList<Point>();
+		int x;
+		int y;
+		List<Point> pMoves = p.getMoves();
+		for(int i = 0; i < pMoves.size(); i++) {
+			x = row + pMoves.get(i).x;
+			y = col + pMoves.get(i).y;
+			if(x >= getRows() || x < 0 ||
+			   y >= getCols() || y < 0) {
+				continue;
+			}
+			if(getGridPieces()[x][y] != null && getGridPieces()[x][y].playerNumber() != this.currentPlayer) {
+				x += pMoves.get(i).x;
+				y += pMoves.get(i).y;
+				if(x >= getRows() || x < 0 ||
+				   y >= getCols() || y < 0) {
+					continue;
+				}
+				if(getGridPieces()[x][y] == null) {
+					captures.add(new Point(x,y));
+				}
+			}		
+		}
+		
+		return captures;
+	}
+	
+	public List<Point> getMoves(int row, int col, Piece p){
+		List<Point> moves = new ArrayList<Point>();
+		int x;
+		int y;
+		List<Point> pMoves = p.getMoves();
+		for(int i = 0; i < pMoves.size(); i++) {
+			x = row + pMoves.get(i).x;
+			y = col + pMoves.get(i).y;
+			if(x >= getRows() || x < 0 ||
+			   y >= getCols() || y < 0) {
+				continue;
+			}
+			if(getGridPieces()[x][y] == null) {
+				moves.add(new Point(x, y));
+			}
+		}
+		return moves;
+	}
+	
+	public void promotePiece(int row, CheckersPiece p) {
+		if(this.currentPlayer == 1) {
+			if(row == 0)
+				p.promote();
+		}
+		if(this.currentPlayer == 2) {
+			if(row == 7)
+				p.promote();
+		}
+	}
 	
 
 }

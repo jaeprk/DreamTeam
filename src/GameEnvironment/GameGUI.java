@@ -34,6 +34,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.CompoundBorder;
 
+import com.sun.glass.ui.Timer;
+
 public final class GameGUI {
 	//-------------------private global variables, used by GameGUI class-----------------------------------------------------------------------------
 	final private String GAME_LAUNCHER = "Game Launcher";	//Name of Game Launcher GUI
@@ -445,7 +447,8 @@ public final class GameGUI {
 							
 							try {
 								//Pull icon path from Piece object
-								image = ImageIO.read(new File(gameBoard.getGridPieces()[row][col].getIcons(gameBoard.getGridPieces()[row][col].player)));						
+								image = ImageIO.read(new File(gameBoard.getGridPieces()[row][col].getIcons(gameBoard.getGridPieces()[row][col].player)));
+								
 							} 
 							catch (IOException | ArrayIndexOutOfBoundsException e) {
 								//Alternative image is used if not is found
@@ -476,7 +479,7 @@ public final class GameGUI {
 					for (Point coord: gameBoard.getAvailableMoves())
 						g2.drawRect(coord.y * cellWidth, coord.x * cellHeight, cellWidth, cellHeight);
 					g2.setStroke(oldStroke);		
-				}				
+				}
 			}
 		}; 
 		

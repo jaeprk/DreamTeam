@@ -10,6 +10,7 @@ class MemoryPiece extends Piece
 {
 	private boolean flipped = false;
 	private int belongsTo = 0;
+	int iconIndex = 0; 
 	private static final String gameFolder = System.getProperty("user.dir") + "/src/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";
 	// Line below for Windows
 	//private static final String gameFolder = System.getProperty("user.dir") + "/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";
@@ -25,7 +26,7 @@ class MemoryPiece extends Piece
 	protected MemoryPiece(String pieceName, int player) 
 	{
 		super(pieceName, player);
-		this.player = player;
+		this.iconIndex = player;
 	}
 
 	@Override
@@ -36,11 +37,11 @@ class MemoryPiece extends Piece
 	@Override
 	public String getIcons(int player) 
 	{
-		return pieceIcon[player - 1];
+		return pieceIcon[iconIndex];
 	}
 	
-	public int getPiece() {
-		return this.player;
+	public int getIconIndex() {
+		return this.iconIndex;
 	}
 	
 	public boolean isFlipped() {

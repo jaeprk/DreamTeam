@@ -71,7 +71,7 @@ public class BattleshipStageBoard extends Board{
 		//Add temporary piece to grid
 		else if (super.getGridPieces()[row][col] == null && !this.firstSelect) {
 			this.firstSelect = true;
-			this.piecePoint = new Pair(row, col);
+			this.piecePoint = new Pair<Integer, Integer>(row, col);
 			super.updateGrid(row, col, new BattleshipPiece("", super.currentPlayer));
 			return true;
 		}		

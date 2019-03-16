@@ -4,13 +4,15 @@
 @@!!asdasd@@!!5
 ##$$Checkers
 ##$$Memory
+@@!!asd@@!!5
+@@!!aasd@@!!5
 @@!!1@@!!0
 ##$$Reversi
 @@!!B@@!!48
 @@!!A@@!!38
 @@!!Lala@@!!1
 ##$$TicTacToe
-@@!!asd@@!!41
+@@!!asd@@!!43
 @@!!sdf@@!!8
 @@!!Thach@@!!6
 @@!!ASD@@!!4

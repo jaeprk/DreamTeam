@@ -8,7 +8,7 @@ import GameEnvironment.Piece;
 
 public class CheckersPiece extends Piece{
 	private static final String gameFolder = System.getProperty("user.dir") + "/src/GameEnvironment/Game/Checkers/";
-	private final String[] pieceIcon = {gameFolder + "black.png", gameFolder + "blackKing.png" + gameFolder + "red.png", gameFolder + "redKing.png"};
+	private final String[] pieceIcon = {gameFolder + "black.png", gameFolder + "blackKing.png", gameFolder + "red.png", gameFolder + "redKing.png"};
 	
 	private boolean king;
 	private List<Point> moves;

@@ -19,24 +19,19 @@ public class CheckersBoard extends Board{
 
 	@Override
 	public void startGame() {
-		for(int i = 0; i <2 ; i++) {
-			if (i % 2 == 0)
-				for(int j = 1; j <=4; j++) {
-					this.updateGrid(i, i * j, new CheckersPiece("red", 2));
-			}
-			else
-				for(int j = 1; j <= 4; j++) 
-					this.updateGrid(i, j, new CheckersPiece("red", 2));
+		for(int i=0; i<8; ++i) {
+			if (i != 3 && i != 4) {
+				for(int j=0; j<8; ++j) {
+					CheckersPiece piece = new CheckersPiece(i<3?"black":"white",i<3?1:2);
+					if(i%2 == 0 && j%2 == 0)
+						this.updateGrid(i, j, piece);
+					if(i%2 != 0 && j%2 != 0) {
+						this.updateGrid(i, j, piece);
+					}
 				}
-//		}	
-//		for(int i = 5; i <= 7; i++) {
-//			int col = i % 2;
-//			for(int j = 1; j <= 4; j++) {
-//				this.updateGrid(i, col, new CheckersPiece("black", 1));
-//			}
-//		}	
+			}
+		}
 		super.currentPlayer = 1;
-		
 	}
 
 	@Override
@@ -78,37 +73,48 @@ public class CheckersBoard extends Board{
 
 	@Override
 	public List<Point> getAvailableMoves() {
-		List<Point> moves = currentPiece.getMoves();
 		List<Point> availableMoves = new ArrayList<Point>();
-		Point nextMove;
+		for(int i=0; i<8; ++i)
+			for(int j=0; j<8; ++j)
+				if(super.getGridPieces()[i][j]==null)
+					if(isMoveValid(i,j))
+						availableMoves.add(new Point(i,j));
+		return availableMoves;
 		
-		if(this.currentPieceLocation == null) {
-			for(int x = 0; x <= 7; x++) {
-				for(int y = 0; y <= 7; y++) {
-					if(getGridPieces()[x][y].playerNumber() == this.currentPlayer) {
-						availableMoves.add(new Point(x,y));
-					}		
-				}
-			}
-		}
-		else {
-		for(int i = 0; i < moves.size(); i++) {
-			Point currentCell = moves.get(i);
-			nextMove = new Point (this.currentPieceLocation.x + currentCell.x,
-								  this.currentPieceLocation.y + currentCell.y);
-			if(getGridPieces()[nextMove.x][nextMove.y] == null &&
-				nextMove.x > 0 && nextMove.x < 8 &&
-				nextMove.y > 0 && nextMove.y < 8){
-				availableMoves.add(nextMove);
-			}
-			if(getGridPieces()[nextMove.x][nextMove.y] != null &&
-			   getGridPieces()[nextMove.x][nextMove.y].playerNumber() != this.currentPlayer &&
-			   getGridPieces()[nextMove.x + currentCell.x][nextMove.y + currentCell.y] == null) {
-				availableMoves.add(nextMove);		
-			}
-		}
-		}
-		return new ArrayList<Point>();
+//		List<Point> moves = currentPiece.getMoves();
+//		List<Point> availableMoves = new ArrayList<Point>();
+//		Point nextMove;
+//		
+//		if(this.currentPieceLocation == null) {
+//			for(int x = 0; x <= 7; x++) {
+//				for(int y = 0; y <= 7; y++) {
+//					// DEBUG : temporary pass
+//					if(getGridPieces()[x][y] == null)
+//						break;
+//					if(getGridPieces()[x][y].playerNumber() == this.currentPlayer) {
+//						availableMoves.add(new Point(x,y));
+//					}		
+//				}
+//			}
+//		}
+//		else {
+//		for(int i = 0; i < moves.size(); i++) {
+//			Point currentCell = moves.get(i);
+//			nextMove = new Point (this.currentPieceLocation.x + currentCell.x,
+//								  this.currentPieceLocation.y + currentCell.y);
+//			if(getGridPieces()[nextMove.x][nextMove.y] == null &&
+//				nextMove.x > 0 && nextMove.x < 8 &&
+//				nextMove.y > 0 && nextMove.y < 8){
+//				availableMoves.add(nextMove);
+//			}
+//			if(getGridPieces()[nextMove.x][nextMove.y] != null &&
+//			   getGridPieces()[nextMove.x][nextMove.y].playerNumber() != this.currentPlayer &&
+//			   getGridPieces()[nextMove.x + currentCell.x][nextMove.y + currentCell.y] == null) {
+//				availableMoves.add(nextMove);		
+//			}
+//		}
+//		}
+//		return new ArrayList<Point>();
 	}
 
 	@Override

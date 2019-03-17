@@ -12,17 +12,20 @@ public class Memory implements GameFactory {
 		buildGame(this.getClass().getSimpleName());	
 	}
 	@Override
-	public void buildGame(String gameName) {
+	public void buildGame(String gameName) 
+	{
 		new GameGUI(buildBoard(), gameName);
 	}
 
 	@Override
-	public Board buildBoard() {
-		return new MemoryBoard(8, 8, 2, Interaction.BOARD, buildPieces());
+	public Board buildBoard() 
+	{
+		return new MemoryBoard(4, 4, 2, Interaction.BOARD, buildPieces());
 	}
 
 	@Override
-	public Piece buildPieces() {
+	public Piece buildPieces() 
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

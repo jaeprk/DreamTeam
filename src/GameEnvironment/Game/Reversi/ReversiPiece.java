@@ -1,7 +1,6 @@
 package GameEnvironment.Game.Reversi;
 
 import java.awt.Point;
-import java.util.HashMap;
 import java.util.List;
 
 import GameEnvironment.Piece;

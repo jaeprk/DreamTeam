@@ -37,6 +37,8 @@ public final class Main {
 	//-------------------static variables, used by package---------------------------------------------------------------------------------------------------
 	static Map<String, HashMap<String, Integer>> savedScores;
 	final static String GAME_ENVIR_DIRECTORY = System.getProperty("user.dir") + "/src/" + new Object(){}.getClass().getPackage().getName() + "/"; //directory of Main package, GameEnvironment
+	//Uncomment line below for Windows
+	//final static String GAME_ENVIR_DIRECTORY = System.getProperty("user.dir") + "/" + new Object(){}.getClass().getPackage().getName() + "/";
 	
 	public static void main(String[] args) {
 		System.out.println("Starting Game Environment...");

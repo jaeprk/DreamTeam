@@ -1,6 +1,6 @@
 package GameEnvironment.Game.TicTacToe;
 
-import javafx.scene.paint.Color;
+import java.awt.Color;
 
 import GameEnvironment.Board;
 import GameEnvironment.GameFactory;

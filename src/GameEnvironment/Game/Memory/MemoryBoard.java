@@ -118,7 +118,10 @@ class MemoryBoard extends Board
 				this.tied = true;
 				System.out.println("Tied");
 			}
-			end = true;
+			else 
+			{
+				end = true;
+			}
 		}
 		return end;
 	}
@@ -126,7 +129,14 @@ class MemoryBoard extends Board
 	@Override
 	protected int calculateScore() 
 	{
-	    return p1score - p2score;
+		if ( p1score > p2score)
+		{
+			return p1score;
+		}
+		else
+		{
+			return p2score;
+		}
 	}
 
 
@@ -240,6 +250,12 @@ class MemoryBoard extends Board
 	@Override
 	public boolean isGameTied() 
 	{
-		return this.tied;
+		if (p1score == 4 && p2score == 4)
+		{
+
+			return true;
+		
+		}
+		return false;
 	}
 }

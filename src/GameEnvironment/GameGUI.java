@@ -63,6 +63,7 @@ public final class GameGUI {
 	private boolean invalidInput;  //Is input valid	
 	private boolean continueGame;  //Determine if GUI is continue prompt
 	
+	
 	//-----------default pieces icon-----------------------------------------------------------------------------------------------------------------
 	private final String iconDirectory = Main.GAME_ENVIR_DIRECTORY + "PlayerIcon/";
 	private final String[] defaultIcon = {iconDirectory + "player1.png", 
@@ -380,6 +381,7 @@ public final class GameGUI {
 		this.cellWidth = (int) gameDimension.getWidth() / gameBoard.getCols();
 		this.cellHeight = (int) gameDimension.getHeight() / gameBoard.getRows();
 		
+		
 		//Instantiate game panel
 		this.gamePanel = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -457,8 +459,8 @@ public final class GameGUI {
 					
 					for (Point coord: gameBoard.getAvailableMoves())
 						g2.drawRect(coord.y * cellWidth, coord.x * cellHeight, cellWidth, cellHeight);
-					g2.setStroke(oldStroke);		
-				}			
+					g2.setStroke(oldStroke);	
+				}
 			}
 		}; 
 		

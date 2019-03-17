@@ -14,7 +14,8 @@ import GameEnvironment.Piece;
 public class ReversiBoard extends Board{
 	
 	private List<Integer> direction;
-	private Boolean lock, update;
+	private Boolean lock, update, tiedGame;
+	private int blackScore, whiteScore, scoreToReturn;
 
 	protected ReversiBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece) {
 		super(rows, cols, maxPlayer, interaction, currentPiece);		
@@ -26,7 +27,9 @@ public class ReversiBoard extends Board{
 	protected ReversiBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece, Pattern pattern, Color color) {
 		super(rows, cols, maxPlayer, interaction, currentPiece, pattern, color);
 	}
-
+/*initialize game board  with 2 black and 2 white pieces
+ * @see GameEnvironment.Board#startGame()
+ */
 	@Override
 	public void startGame() {
 		super.updateGrid(3, 3, new ReversiPiece("",2));
@@ -35,11 +38,18 @@ public class ReversiBoard extends Board{
 		super.updateGrid(4, 4, new ReversiPiece("",2));
 		super.currentPlayer = 1;
 		lock = false;
+		tiedGame = false;
+		blackScore = 0;
+		whiteScore = 0;
+		scoreToReturn = 0;
 		direction = new ArrayList<Integer>();
 		return;
 		
 	}
-
+/*
+ * Checks to see if row and col is a right move for the current player
+ * @see GameEnvironment.Board#isMoveValid(int, int)
+ */
 	@Override
 	public boolean isMoveValid(int row, int col) {
 		if(getGridPieces()[row][col] != null)
@@ -93,7 +103,9 @@ public class ReversiBoard extends Board{
 			direction.add(10);
 		}
 		resetLock();
-		
+		/*
+		 * switch statement that calls functions that flip tiles on a specific direction
+		 */
 		if(direction.size() >0){
 			for(int i = 0; i<direction.size(); i++){
 				switch(direction.get(i)){
@@ -120,7 +132,10 @@ public class ReversiBoard extends Board{
 		}
 		return false;
 	}
-
+/*
+ * gets all the available moves for the current player at the current state of the board
+ * @see GameEnvironment.Board#getAvailableMoves()
+ */
 	@Override
 	public List<Point> getAvailableMoves() {
 		this.update = false;
@@ -137,20 +152,91 @@ public class ReversiBoard extends Board{
 		this.update = true;
 		return allValidMoves;
 	}
-
+	/*
+	 * Override next player
+	 * first in switches to the next player
+	 * then it checks for all available moves for the new current player
+	 * if no moves are found for current player, current player skips a turn switches to next avaiable player
+	 */
+	@Override
+	protected void nextPlayer() {
+		
+		if(++this.currentPlayer > Board.maxPlayer)
+			this.currentPlayer =1;
+		
+		
+		if (getAvailableMoves().isEmpty()){
+			if(currentPlayer == 1){
+				this.currentPlayer = 2;
+			}
+			else{
+				this.currentPlayer = 1;
+			}
+		}
+		
+	}
+/*
+ * checks to see if the game has ended by checking if there are no available moves for either player, if this is the case function returns true
+ * it also calculates score
+ * whoever has the most scores wins
+ * whoever has the most scores becomes current player, which is used to display winner in the GUI
+ * if it ends in a tie, returns false, and sets tiedGame flag to true, this variable will take care of the tiedgame  
+ * @see GameEnvironment.Board#endGame()
+ */
 	@Override
 	public boolean endGame() {
-		// TODO Auto-generated method stub
+		if(++this.currentPlayer > Board.maxPlayer) //switch to the next player
+			this.currentPlayer = 1;
+		if(getAvailableMoves().isEmpty())
+		{
+			if(--this.currentPlayer < 1) //switch back to the original player in turn
+				this.currentPlayer = Board.maxPlayer;
+			if(getAvailableMoves().isEmpty()){
+				totalScores();
+				if(blackScore > whiteScore){
+					scoreToReturn = blackScore;
+					this.currentPlayer = 1;
+				}
+				else if (whiteScore > blackScore){
+					scoreToReturn = whiteScore;
+					this.currentPlayer = 2;
+				}
+				else if( whiteScore == blackScore){
+					tiedGame = true;
+					return false;
+				}
+				return true;
+			}
+		}
+		if(--this.currentPlayer < 1)
+			this.currentPlayer = Board.maxPlayer;
 		return false;
 	}
 
 	@Override
 	protected int calculateScore() {
-		return 1;
-		// TODO Auto-generated method stub
+		return scoreToReturn;
 		
 	}
+	/*
+	 * helper funtion to calculate scores
+	 */
 	
+	private void totalScores(){
+		for(int row = 0; row<8; row++){
+			for(int col = 0; col < 8; col++){
+				if(getGridPieces()[row][col].playerNumber() == 1)
+					blackScore++;
+				else if(getGridPieces()[row][col].playerNumber() == 2)
+					whiteScore++;
+			}
+		}
+	}
+	
+	
+	/*
+	 * all the functions below are helper functions that check if move is valid at a specific direction
+	 */
 	private int leftDirection(int r, int c){
 		int i = c-1;
 		if(i < 0)
@@ -422,7 +508,7 @@ public class ReversiBoard extends Board{
 			
 		}
 	}
-
+	
 	private void setLock(boolean status){
 		lock = status;
 	}
@@ -434,10 +520,19 @@ public class ReversiBoard extends Board{
 	private void resetLock(){
 		lock = false;
 	}
+	/*
+	 * this ends all of the helper functions for all valid moves to specific directions.
+	 */
 	
+	
+	/*
+	 * if tiedGame is true then it return true to the game tied.
+	 * @see GameEnvironment.Board#isGameTied()
+	 */
 	@Override
 	public boolean isGameTied() {
-		// TODO Auto-generated method stub
+		if(tiedGame)
+			return true;
 		return false;
 	}
 }

@@ -20,7 +20,7 @@ public abstract class Board {
 	private Interaction interaction; //Board interaction
 	private Pattern pattern;
 	private Color color;
-	static int maxPlayer; //Max number of players
+	protected static int maxPlayer; //Max number of players
 	protected int currentPlayer; //Current player number
 	
 	/* User must supply the size of the board, maximum number of player, pattern and interaction of board

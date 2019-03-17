@@ -1,7 +1,8 @@
-##$$Battleship
-##$$Checkers
 ##$$Memory
 ##$$Reversi
+@@!!B@@!!48
+@@!!A@@!!38
+@@!!Lala@@!!1
 ##$$TicTacToe
 @@!!Thach@@!!6
 @@!!asd@@!!5

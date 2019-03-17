@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import GameEnvironment.Board;
 import GameEnvironment.Interaction;
@@ -14,27 +17,37 @@ import GameEnvironment.Piece;
 import GameEnvironment.Game.Checkers.CheckersPiece;
 import GameEnvironment.Game.Reversi.ReversiPiece;
 import GameEnvironment.Game.TicTacToe.TicTacToePiece;
+import javafx.util.Pair;
 
 class MemoryBoard extends Board 
 {
 	private MemoryPiece[][] gridPieces = new MemoryPiece[100][100]; //matrix for holding randomized pieces
 	int player1Last = 0;
 	int player2Last = 0;
-	boolean player1Selecting = false;
-	boolean player2Selecting = false;
+	MemoryPiece lastp1;
+	MemoryPiece lastp2;
+	Pair<Integer, Integer> lastp1Coord;
+	Pair<Integer, Integer> lastp2Coord;
 	
+	int playerSelecting = 0; // Up to 4
+	
+	int p1score = 0;
+	int p2score = 0;
+	boolean tied = false;
+	
+	boolean gameStart = false;
 	protected MemoryBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece) 
 	{
 		super(rows, cols, maxPlayer, interaction, currentPiece);
-		
+		super.pattern = Pattern.BLANK;
 		ArrayList<Integer> firstHalf = new ArrayList<Integer>();
 		ArrayList<Integer> secondHalf = new ArrayList<Integer>();
 		
-		for (int i = 1; i < 33; ++i) {
+		for (int i = 1; i < 9; ++i) {
 			firstHalf.add(i);
 		}
 		
-		for (int i = 1; i < 33; ++i) {
+		for (int i = 1; i < 9; ++i) {
 			secondHalf.add(i);
 		}
 		
@@ -56,7 +69,7 @@ class MemoryBoard extends Board
 		int second_counter = 0;
 		for (int i = 0; i < rows; ++i) {
 			for (int j = 0; j < cols; ++j) {
-				if (swap >= 32) {
+				if (swap >= 8) {
 					//super.updateGrid(i, j, new MemoryPiece("", secondHalf.get(second_counter)));
 					gridPieces[i][j] =  new MemoryPiece("", secondHalf.get(second_counter));
 					second_counter++;
@@ -69,12 +82,22 @@ class MemoryBoard extends Board
 				}
 			}
 		}
+		
+		for (int i = 0; i < rows; ++i) {
+			System.out.println();
+			for (int j = 0; j < cols; ++j) {
+				System.out.print(gridPieces[i][j].getPiece() + " ");
+			}
+		}
+		System.out.println();
+		
 	}
 	
 	@Override
 	public void startGame() 
 	{
 		super.currentPlayer = 1;
+		gameStart = true;
 	}
 
 
@@ -82,112 +105,127 @@ class MemoryBoard extends Board
 	public boolean endGame() 
 	{
 		int ctr = 0;
-		for(int i = 1; i < 9; ++i) 
-		{
-			for (int j = 1; j < 9; ++j) 
-			{
-				if(gridPieces[i][j] == null) 
-				{
+		boolean end = false;
+		for (int i = 0; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				if (gridPieces[i][j].isFlipped()) {
 					ctr++;
-				}
-				//If every piece is null
-				if (ctr == 64)
-				{
-					return true;
 				}
 			}
 		}
-		return false;
+		if (ctr == 16) {
+			if (p1score == p2score) {
+				this.tied = true;
+				System.out.println("Tied");
+			}
+			end = true;
+		}
+		return end;
 	}
 
 	@Override
 	protected int calculateScore() 
 	{
-
-		return 1;
-		
+	    return p1score - p2score;
 	}
 
 
 	@Override
 	public boolean isMoveValid(int row, int col)
 	{
-		if (super.getCurrentPlayer() == 1) {
-			System.out.println("Recalled, player1Last: " + player1Last);
-		} else {
-			System.out.println("Recalled, player2Last: " + player2Last);
+		
+		if (gameStart == true) {
+			super.nextPlayer();
+			this.gameStart = false;
+			return true;
 		}
 		
-		//Reveal piece if clicked piece is null(unflipped)
-		
-	    if (gridPieces[row][col] != null) 
-		{
-			//temp MemoryPiece
-			MemoryPiece p;
-			
-			p = gridPieces[row][col];
-			
-			//reveal the piece
-			super.updateGrid(row, col, gridPieces[row][col]);
-			
-			//Update current piece
-			super.currentPiece = gridPieces[row][col];
-			
-			if (player1Selecting) {
-				super.nextPlayer();
-				int current = ((MemoryPiece) (super.currentPiece)).getPiece();
-				System.out.println("Current piece: " + current + "vs. last: " + player1Last);
-				System.out.println("This piece was turned over by: " + super.getCurrentPlayer());
-				if (current == player1Last) {
-					System.out.println("It's a match");
-					return true;
-				} else {
-					System.out.println("Flipping back over...");
-				}
-			}
-			
-			if (super.getCurrentPlayer() == 1 && !player1Selecting) {
-				player1Last = ((MemoryPiece) (super.currentPiece)).getPiece();
-				gridPieces[row][col] = null;
-				player1Selecting = true;
-				
-				return true;
-			}
-		    
-			//System.out.println("Current piece: " + ((MemoryPiece) (super.currentPiece)).getPiece() + " turned over by player: " + super.getCurrentPlayer());
-			
-			//Make null to make sure player cannot choose the same piece again.
-			gridPieces[row][col] = null;
-			
-			/*
-			//if next click equals first click
-			if ( super.currentPiece == gridPieces[row][col] )
-			{
-				
-				//keep second revealed
-				gridPieces[row][col] = p;
-				super.updateGrid(row, col, gridPieces[row][col]);
-				//Make it visited
-				gridPieces[row][col] = null;
-				
-				//keep second revealed
-				super.updateGrid(row2, col2, gridPieces[row2][col2]);
-				//make it visited
-				gridPieces[row2][col2] = null;
-				
-				
-				
-			}
-			
-			else (gridPieces[row2][col2] != gridPieces[row][col])
-			{
-				//Flip piece back down
-				super.updateGrid(row, col, gridPieces[row][col]);
+	    // Piece that was selected on THIS method call
+		MemoryPiece current = gridPieces[row][col];
+		if (current.isFlipped()) {
+			return false;
+		}
+		System.out.println("Current player: " + this.playerSelecting);
 
-				//Reupdate piece
-				gridPieces[row][col] = p;
+		if (this.playerSelecting <= 2) {
+			super.currentPlayer = 1;
+			this.playerSelecting++;
+		} else {
+			super.currentPlayer = 2;
+			if (this.playerSelecting < 4) {
+				this.playerSelecting++;
+			} else {
+				this.playerSelecting = 1;
 			}
-			*/
+		}
+		
+		//Reveal piece if clicked piece is unflipped
+	    if (!current.isFlipped()) 
+		{
+	    	// Player 1's first selection 
+	    	
+	    	if (this.playerSelecting == 1) {
+	    		lastp1 = current;
+	        	player1Last = current.getPiece();
+	        	lastp1Coord = new Pair<Integer, Integer>(row, col);
+	        	super.updateGrid(row, col, current);
+	        	current.setFlipped(true);
+	        	
+	        } else if (this.playerSelecting == 2) { // Player 1's second selection, then check
+	        	if (player1Last == current.getPiece()) {
+	        		System.out.println("Player 1 Matched: " + player1Last + " with " + current.getPiece());
+	        		super.updateGrid(row, col, current);
+		        	current.setFlipped(true);
+		        	p1score++;
+		        	current.setPlayer(1);
+		        	lastp1.setPlayer(1);
+		        	System.out.println("---Scoreboard---");
+		        	System.out.println("P1: " + p1score + " | P2: " + p2score);
+		        		
+	        	} else {
+	                System.out.println("No match for player 1");
+	                super.updateGrid(row, col, null);
+	                super.updateGrid(lastp1Coord.getKey(), lastp1Coord.getValue(), null);
+		        	current.setFlipped(false);
+		        	lastp1.setFlipped(false);
+	        	}
+	        	// Player 2's selection
+	        } else if (this.playerSelecting == 3) {
+	        	lastp2 = current;
+	        	player2Last = current.getPiece();
+	        	lastp2Coord = new Pair<Integer, Integer>(row, col);
+	        	super.updateGrid(row, col, current);
+	        	current.setFlipped(true);
+	        } else {
+	        	if (player2Last == current.getPiece()) {
+	        		System.out.println("Player 2 Matched: " + player2Last + " with " + current.getPiece());
+	        		super.updateGrid(row, col, current);
+		        	current.setFlipped(true);
+		        	p2score++;
+		        	System.out.println("---Scoreboard---");
+		        	System.out.println("P1: " + p1score + " | P2: " + p2score);
+		        	current.setPlayer(2);
+		        	lastp1.setPlayer(2);
+	        	} else {
+	                System.out.println("No match for player 2");
+	                /*
+	                ***** SHOW SECOND PIECE *********
+	               
+	                super.updateGrid(row, col, current);
+	                current.setFlipped(true);
+	                
+	                ***** DELAY FOR A FEW SECONDS ***
+	                
+	                ******** MOVE ON ****************
+	                */
+	                super.updateGrid(row, col, null);
+	                super.updateGrid(lastp2Coord.getKey(), lastp2Coord.getValue(), null);
+		        	current.setFlipped(false);
+		        	lastp2.setFlipped(false);
+	                
+	        	}
+	        	
+	        }
 			return true;
 		}
 		return false;
@@ -202,11 +240,6 @@ class MemoryBoard extends Board
 	@Override
 	public boolean isGameTied() 
 	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public void flipPiece(int row, int col) {
-		
+		return this.tied;
 	}
 }

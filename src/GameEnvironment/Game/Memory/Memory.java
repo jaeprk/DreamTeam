@@ -20,7 +20,7 @@ public class Memory implements GameFactory {
 	@Override
 	public Board buildBoard() 
 	{
-		return new MemoryBoard(8, 8, 2, Interaction.BOARD, buildPieces());
+		return new MemoryBoard(4, 4, 2, Interaction.BOARD, buildPieces());
 	}
 
 	@Override

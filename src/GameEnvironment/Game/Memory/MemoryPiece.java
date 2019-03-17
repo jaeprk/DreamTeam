@@ -8,7 +8,11 @@ import GameEnvironment.Piece;
 
 class MemoryPiece extends Piece 
 {
-	private static final String gameFolder = System.getProperty("user.dir") + "/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";
+	private boolean flipped = false;
+	private int belongsTo = 0;
+	private static final String gameFolder = System.getProperty("user.dir") + "/src/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";
+	// Line below for Windows
+	//private static final String gameFolder = System.getProperty("user.dir") + "/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";
 	private final String[] pieceIcon = {gameFolder + "1.png", gameFolder + "2.png", gameFolder + "3.png", gameFolder + "4.png",
 										gameFolder + "5.png", gameFolder + "6.png", gameFolder + "A.png", gameFolder + "B.png",
 										gameFolder + "C.png", gameFolder + "D.png", gameFolder + "E.png", gameFolder + "F.png",
@@ -37,6 +41,22 @@ class MemoryPiece extends Piece
 	
 	public int getPiece() {
 		return this.player;
+	}
+	
+	public boolean isFlipped() {
+		return this.flipped;
+	}
+	
+	public void setFlipped(boolean flipped) {
+		this.flipped = flipped;
+	}
+	
+	public int getBelongs() {
+		return this.belongsTo;
+	}
+	
+	public void setPlayer(int belongsTo) { 
+		this.belongsTo = belongsTo;
 	}
 
 }

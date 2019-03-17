@@ -4,6 +4,7 @@
 @@!!asdasd@@!!5
 ##$$Checkers
 ##$$Memory
+@@!!1@@!!0
 ##$$Reversi
 ##$$TicTacToe
 @@!!asd@@!!41

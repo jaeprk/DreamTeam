@@ -18,7 +18,7 @@ public abstract class Board {
 	private Piece[][] gridPieces; //Matrix for the pieces
 	protected Piece currentPiece; //Single instance of a piece
 	private Interaction interaction; //Board interaction
-	private Pattern pattern;
+	protected Pattern pattern;
 	private Color color;
 	static int maxPlayer; //Max number of players
 	protected int currentPlayer; //Current player number

@@ -224,10 +224,12 @@ public class ReversiBoard extends Board{
 	private void totalScores(){
 		for(int row = 0; row<8; row++){
 			for(int col = 0; col < 8; col++){
-				if(getGridPieces()[row][col].playerNumber() == 1)
-					blackScore++;
-				else if(getGridPieces()[row][col].playerNumber() == 2)
-					whiteScore++;
+				if(getGridPieces()[row][col] != null){
+					if(getGridPieces()[row][col].playerNumber() == 1)
+						blackScore++;
+					else if(getGridPieces()[row][col].playerNumber() == 2)
+						whiteScore++;
+				}
 			}
 		}
 	}

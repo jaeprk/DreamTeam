@@ -26,9 +26,10 @@ public class ReversiBoard extends Board{
 	protected ReversiBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece, Pattern pattern, Color color) {
 		super(rows, cols, maxPlayer, interaction, currentPiece, pattern, color);
 	}
-/*initialize game board  with 2 black and 2 white pieces
- * @see GameEnvironment.Board#startGame()
- */
+	
+	/*initialize game board  with 2 black and 2 white pieces
+	 * @see GameEnvironment.Board#startGame()
+	 */
 	@Override
 	public void startGame() {
 		super.updateGrid(3, 3, new ReversiPiece("",2));
@@ -45,10 +46,11 @@ public class ReversiBoard extends Board{
 		return;
 		
 	}
-/*
- * Checks to see if row and col is a right move for the current player
- * @see GameEnvironment.Board#isMoveValid(int, int)
- */
+	
+	/*
+	 * Checks to see if row and col is a right move for the current player
+	 * @see GameEnvironment.Board#isMoveValid(int, int)
+	 */
 	@Override
 	public boolean isMoveValid(int row, int col) {
 		if(getGridPieces()[row][col] != null)
@@ -59,48 +61,56 @@ public class ReversiBoard extends Board{
 				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(3);
 		}
+		
 		resetLock();
 		if(rightDirection(row,col) == 4){
 			if (this.update)
 				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(4);
 		}
+		
 		resetLock();
 		if(upDirection(row,col) == 5){
 			if (this.update)
 				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(5);
 		}
+		
 		resetLock();
 		if(downDirection(row,col) == 6){
 			if (this.update)
 				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(6);
 		}
+		
 		resetLock();
 		if(leftUpDirection(row,col)== 7){
 			if (this.update)
 				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(7);
 		}
+		
 		resetLock();
 		if(rightUpDirection(row,col)== 8){
 			if (this.update)
 				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(8);
 		}
+		
 		resetLock();
 		if(leftDownDirection(row,col) == 9){
 			if (this.update)
 				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(9);
 		}
+		
 		resetLock();
 		if(rightDownDirection(row,col) == 10){
 			if (this.update)
 				updateGrid(row, col, new ReversiPiece("",currentPlayer));
 			direction.add(10);
 		}
+		
 		resetLock();
 		/*
 		 * switch statement that calls functions that flip tiles on a specific direction
@@ -131,10 +141,11 @@ public class ReversiBoard extends Board{
 		}
 		return false;
 	}
-/*
- * gets all the available moves for the current player at the current state of the board
- * @see GameEnvironment.Board#getAvailableMoves()
- */
+	
+	/*
+	 * gets all the available moves for the current player at the current state of the board
+	 * @see GameEnvironment.Board#getAvailableMoves()
+	 */
 	@Override
 	public List<Point> getAvailableMoves() {
 		this.update = false;
@@ -151,6 +162,7 @@ public class ReversiBoard extends Board{
 		this.update = true;
 		return allValidMoves;
 	}
+	
 	/*
 	 * Override next player
 	 * first in switches to the next player
@@ -174,14 +186,15 @@ public class ReversiBoard extends Board{
 		}
 		
 	}
-/*
- * checks to see if the game has ended by checking if there are no available moves for either player, if this is the case function returns true
- * it also calculates score
- * whoever has the most scores wins
- * whoever has the most scores becomes current player, which is used to display winner in the GUI
- * if it ends in a tie, returns false, and sets tiedGame flag to true, this variable will take care of the tiedgame  
- * @see GameEnvironment.Board#endGame()
- */
+	
+	/*
+	 * checks to see if the game has ended by checking if there are no available moves for either player, if this is the case function returns true
+	 * it also calculates score
+	 * whoever has the most scores wins
+	 * whoever has the most scores becomes current player, which is used to display winner in the GUI
+	 * if it ends in a tie, returns false, and sets tiedGame flag to true, this variable will take care of the tiedgame  
+	 * @see GameEnvironment.Board#endGame()
+	 */
 	@Override
 	public boolean endGame() {
 		if(++this.currentPlayer > Board.maxPlayer) //switch to the next player
@@ -217,10 +230,10 @@ public class ReversiBoard extends Board{
 		return scoreToReturn;
 		
 	}
+	
 	/*
 	 * helper funtion to calculate scores
-	 */
-	
+	 */	
 	private void totalScores(){
 		for(int row = 0; row<8; row++){
 			for(int col = 0; col < 8; col++){
@@ -426,10 +439,8 @@ public class ReversiBoard extends Board{
 		while(getGridPieces()[r][i].playerNumber() != currentPlayer){
 			if (this.update) 
 				updateGrid(r, i, new ReversiPiece("",currentPlayer));
-				i--;
-			
-		}
-			
+				i--;			
+		}			
 	}
 	
 	private void flipRightDirection(int r, int c){
@@ -437,8 +448,7 @@ public class ReversiBoard extends Board{
 		while(getGridPieces()[r][i].playerNumber() != currentPlayer){
 			if (this.update) 
 				updateGrid(r, i, new ReversiPiece("", currentPlayer));
-				i++;
-			
+				i++;			
 		}
 	}
 	
@@ -447,8 +457,7 @@ public class ReversiBoard extends Board{
 		while(getGridPieces()[i][c].playerNumber() != currentPlayer){
 			if (this.update) 
 				updateGrid(i, c, new ReversiPiece("",currentPlayer));
-				i--;
-			
+				i--;			
 		}
 	}
 	
@@ -457,8 +466,7 @@ public class ReversiBoard extends Board{
 		while(getGridPieces()[i][c].playerNumber() != currentPlayer){
 			if (this.update) 
 				updateGrid(i, c, new ReversiPiece("", currentPlayer));
-				i++;
-			
+				i++;			
 		}
 	}
 	
@@ -469,8 +477,7 @@ public class ReversiBoard extends Board{
 			if (this.update) 
 				updateGrid(i,j, new ReversiPiece("", currentPlayer));
 				i--;
-				j--;
-			
+				j--;			
 		}
 	}
 	
@@ -481,8 +488,7 @@ public class ReversiBoard extends Board{
 			if (this.update) 
 				updateGrid(i,j, new ReversiPiece("", currentPlayer));
 				i--;
-				j++;
-			
+				j++;			
 		}
 	}
 	
@@ -493,8 +499,7 @@ public class ReversiBoard extends Board{
 			if (this.update) 
 				updateGrid(i,j, new ReversiPiece("", currentPlayer));
 				i++;
-				j--;
-			
+				j--;			
 		}
 	}
 	
@@ -505,8 +510,7 @@ public class ReversiBoard extends Board{
 			if (this.update) 
 				updateGrid(i,j,new ReversiPiece("", currentPlayer));
 				i++;
-				j++;
-			
+				j++;			
 		}
 	}
 	
@@ -523,8 +527,7 @@ public class ReversiBoard extends Board{
 	}
 	/*
 	 * this ends all of the helper functions for all valid moves to specific directions.
-	 */
-	
+	 */	
 	
 	/*
 	 * if tiedGame is true then it return true to the game tied.

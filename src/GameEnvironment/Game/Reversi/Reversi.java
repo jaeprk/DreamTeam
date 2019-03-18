@@ -20,6 +20,7 @@ public class Reversi implements GameFactory{
 	public Reversi() {
 		buildGame(this.getClass().getSimpleName());	
 	}
+	
 	/* Create the Reversi GameGUI
 	 * Force user to create a board
 	 * @param name of the class, also the name of the game
@@ -28,6 +29,7 @@ public class Reversi implements GameFactory{
 	public void buildGame(String gameName) {
 		new GameGUI(buildBoard(), gameName);		
 	}
+	
 	/* Create the Reversi object
 	 * Currently its: row, col, number of players, board interaction, and force creating Piece object
 	 * @return a Board object
@@ -36,6 +38,7 @@ public class Reversi implements GameFactory{
 	public Board buildBoard() {
 		return new ReversiBoard(8, 8, 2, Interaction.BOARD, buildPieces(), Pattern.BLANK, Color.GREEN);
 	}
+	
 	/* Create a Reversi object
 	 * @return a Reversi object
 	 */
@@ -43,5 +46,4 @@ public class Reversi implements GameFactory{
 	public Piece buildPieces() {
 		return new ReversiPiece("", 1);
 	}
-
 }

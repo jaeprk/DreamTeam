@@ -1,21 +1,30 @@
 package GameEnvironment.Game.Checkers;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 import GameEnvironment.Board;
 import GameEnvironment.Interaction;
+import GameEnvironment.Pattern;
 import GameEnvironment.Piece;
 
 public class CheckersBoard extends Board{
 	
-	Point currentPieceLocation;
-	boolean pieceSelected;
-	boolean combo;
+	private Point currentPieceLocation;
+	private boolean pieceSelected;
+	private boolean combo;
 	
 	protected CheckersBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece) {
 		super(rows, cols, maxPlayer, interaction, currentPiece);
+		this.currentPieceLocation = null;
+		this.pieceSelected = false;
+		this.combo = false;
+	}
+	
+	protected CheckersBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece, Pattern pattern, Color color) {
+		super(rows, cols, maxPlayer, interaction, currentPiece, pattern, color);
 		this.currentPieceLocation = null;
 		this.pieceSelected = false;
 		this.combo = false;
@@ -37,10 +46,6 @@ public class CheckersBoard extends Board{
 
 	@Override
 	public boolean endGame() {
-		// TODO Auto-generated method stub
-		//end game rules.
-		//check score
-		
 		boolean tmp[] = new boolean[] {true, true};
 		for(int x = 0; x < getRows(); x++) {
 			for(int y = 0; y < getCols(); y++) {
@@ -54,9 +59,6 @@ public class CheckersBoard extends Board{
 
 	@Override
 	protected int calculateScore() {
-		// TODO Auto-generated method stub
-		//+ one for every piece taken?
-		
 		int tmp = 0;
 		for(int x = 0; x < getRows(); x++) {
 			for(int y = 0; y < getCols(); y++) {
@@ -75,8 +77,7 @@ public class CheckersBoard extends Board{
 			if(++this.currentPlayer > 2)
 				this.currentPlayer = 1;
 		}
-	}
-		
+	}		
 
 	@Override
 	public boolean isMoveValid(int row, int col) {
@@ -151,15 +152,14 @@ public class CheckersBoard extends Board{
 
 	@Override
 	public boolean isGameTied() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
-	public boolean hasMoves(int row, int col, Piece p) {
+	private boolean hasMoves(int row, int col, Piece p) {
 		return (!(getCaptures(row, col, p).isEmpty()) || !(getMoves(row, col, p).isEmpty()));
 	}
 	
-	public List<Point> getCaptures(int row, int col, Piece p){
+	private List<Point> getCaptures(int row, int col, Piece p){
 		List<Point> captures = new ArrayList<Point>();
 		int x;
 		int y;
@@ -187,7 +187,7 @@ public class CheckersBoard extends Board{
 		return captures;
 	}
 	
-	public List<Point> getMoves(int row, int col, Piece p){
+	private List<Point> getMoves(int row, int col, Piece p){
 		List<Point> moves = new ArrayList<Point>();
 		int x;
 		int y;
@@ -206,7 +206,7 @@ public class CheckersBoard extends Board{
 		return moves;
 	}
 	
-	public void promotePiece(int row, CheckersPiece p) {
+	private void promotePiece(int row, CheckersPiece p) {
 		if(this.currentPlayer == 1) {
 			if(row == 0)
 				p.promote();
@@ -216,6 +216,4 @@ public class CheckersBoard extends Board{
 				p.promote();
 		}
 	}
-	
-
 }

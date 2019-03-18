@@ -26,7 +26,4 @@ public class Checkers implements GameFactory{
 	public Piece buildPieces() {
 		return null;
 	}
-	
-	
-
 }

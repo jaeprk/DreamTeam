@@ -9,19 +9,16 @@ import GameEnvironment.Piece;
 class MemoryPiece extends Piece 
 {
 	private boolean flipped = false;
-	private int belongsTo = 0;
-	int iconIndex = 0; 
-	private static final String gameFolder = System.getProperty("user.dir") + "/src/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";
-	// Line below for Windows
-	//private static final String gameFolder = System.getProperty("user.dir") + "/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";
-	private final String[] pieceIcon = {gameFolder + "1.png", gameFolder + "2.png", gameFolder + "3.png", gameFolder + "4.png",
-										gameFolder + "5.png", gameFolder + "6.png", gameFolder + "A.png", gameFolder + "B.png",
-										gameFolder + "C.png", gameFolder + "D.png", gameFolder + "E.png", gameFolder + "F.png",
-										gameFolder + "G.png", gameFolder + "H.png", gameFolder + "I.png", gameFolder + "J.png",
-										gameFolder + "K.png", gameFolder + "L.png", gameFolder + "M.png", gameFolder + "N.png",
-										gameFolder + "O.png", gameFolder + "P.png", gameFolder + "Q.png", gameFolder + "R.png",
-										gameFolder + "S.png", gameFolder + "T.png", gameFolder + "U.png", gameFolder + "V.png",
-										gameFolder + "W.png", gameFolder + "X.png", gameFolder + "Y.png", gameFolder + "Z.png"};
+	private int iconIndex; 
+	private final String GAME_FOLDER = System.getProperty("user.dir") + "/src/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";
+	private final String[] PIECE_ICON = {GAME_FOLDER + "1.png", GAME_FOLDER + "2.png", GAME_FOLDER + "3.png", GAME_FOLDER + "4.png",
+										 GAME_FOLDER + "5.png", GAME_FOLDER + "6.png", GAME_FOLDER + "A.png", GAME_FOLDER + "B.png",
+										 GAME_FOLDER + "C.png", GAME_FOLDER + "D.png", GAME_FOLDER + "E.png", GAME_FOLDER + "F.png",
+										 GAME_FOLDER + "G.png", GAME_FOLDER + "H.png", GAME_FOLDER + "I.png", GAME_FOLDER + "J.png",
+										 GAME_FOLDER + "K.png", GAME_FOLDER + "L.png", GAME_FOLDER + "M.png", GAME_FOLDER + "N.png",
+										 GAME_FOLDER + "O.png", GAME_FOLDER + "P.png", GAME_FOLDER + "Q.png", GAME_FOLDER + "R.png",
+										 GAME_FOLDER + "S.png", GAME_FOLDER + "T.png", GAME_FOLDER + "U.png", GAME_FOLDER + "V.png",
+										 GAME_FOLDER + "W.png", GAME_FOLDER + "X.png", GAME_FOLDER + "Y.png", GAME_FOLDER + "Z.png"};
 	
 	protected MemoryPiece(String pieceName, int player) 
 	{
@@ -37,7 +34,7 @@ class MemoryPiece extends Piece
 	@Override
 	public String getIcons(int player) 
 	{
-		return pieceIcon[iconIndex];
+		return PIECE_ICON[iconIndex];
 	}
 	
 	public int getIconIndex() {
@@ -51,13 +48,4 @@ class MemoryPiece extends Piece
 	public void setFlipped(boolean flipped) {
 		this.flipped = flipped;
 	}
-	
-	public int getBelongs() {
-		return this.belongsTo;
-	}
-	
-	public void setPlayer(int belongsTo) { 
-		this.belongsTo = belongsTo;
-	}
-
 }

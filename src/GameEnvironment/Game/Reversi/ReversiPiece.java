@@ -7,13 +7,13 @@ import GameEnvironment.Piece;
 
 public class ReversiPiece extends Piece{
 	
-	private static final String gameFolder = System.getProperty("user.dir") + "/src/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";
-	private final String[] pieceIcon = {gameFolder + "blackPiece.png", gameFolder +"whitePiece.png"};
+	private final String GAME_FOLDER = System.getProperty("user.dir") + "/src/" + new Object(){}.getClass().getPackage().getName().replace(".", "/") + "/";
+	private final String[] PIECE_ICON = {GAME_FOLDER + "blackPiece.png", GAME_FOLDER +"whitePiece.png"};
 	
 	/* Constructor for Piece
 	 * @param name of piece (used for debugging), player the piece belong to
 	 */
-	protected ReversiPiece(String pieceName, int player) {
+	ReversiPiece(String pieceName, int player) {
 		super(pieceName, player);
 	}
 
@@ -27,7 +27,7 @@ public class ReversiPiece extends Piece{
 	 */
 	@Override
 	public String getIcons(int player) {
-		return pieceIcon[player-1];
+		return PIECE_ICON[player-1];
 	}
 
 	

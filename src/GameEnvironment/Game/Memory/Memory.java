@@ -14,6 +14,7 @@ public class Memory implements GameFactory {
 	public Memory () {
 		buildGame(this.getClass().getSimpleName());	
 	}
+	
 	@Override
 	public void buildGame(String gameName) 
 	{
@@ -29,8 +30,6 @@ public class Memory implements GameFactory {
 	@Override
 	public Piece buildPieces() 
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

@@ -34,8 +34,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.CompoundBorder;
 
-import com.sun.glass.ui.Timer;
-
 public final class GameGUI {
 	//-------------------private global variables, used by GameGUI class-----------------------------------------------------------------------------
 	final private String GAME_LAUNCHER = "Game Launcher";	//Name of Game Launcher GUI
@@ -462,6 +460,7 @@ public final class GameGUI {
 						}
 					}					
 				}
+				
 				//Highlight cell of all available moves, if it is not empty
 				if (!gameBoard.getAvailableMoves().isEmpty()) {
 					if (gameBoard.getColor() == Color.GREEN)

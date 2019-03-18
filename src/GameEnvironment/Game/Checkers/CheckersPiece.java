@@ -7,8 +7,8 @@ import java.util.List;
 import GameEnvironment.Piece;
 
 public class CheckersPiece extends Piece{
-	private static final String gameFolder = System.getProperty("user.dir") + "/src/GameEnvironment/Game/Checkers/";
-	private final String[] pieceIcon = {gameFolder + "black.png", gameFolder + "blackKing.png", gameFolder + "red.png", gameFolder + "redKing.png"};
+	private final String GAME_FOLDER = System.getProperty("user.dir") + "/src/GameEnvironment/Game/Checkers/";
+	private final String[] PIECE_ICON = {GAME_FOLDER + "black.png", GAME_FOLDER + "blackKing.png", GAME_FOLDER + "red.png", GAME_FOLDER + "redKing.png"};
 	
 	private boolean king;
 	private List<Point> moves;
@@ -30,9 +30,9 @@ public class CheckersPiece extends Piece{
 	@Override
 	public String getIcons(int player) {
 		if(this.king) {
-			return pieceIcon[(2 * (player-1)) + 1];
+			return PIECE_ICON[(2 * (player-1)) + 1];
 		} 
-		return pieceIcon[2*(player-1)];
+		return PIECE_ICON[2*(player-1)];
 	}
 	
 	public void promote() {
@@ -56,5 +56,4 @@ public class CheckersPiece extends Piece{
 	public List<Point> getMoves() {
 		return moves;
 	}
-
 }

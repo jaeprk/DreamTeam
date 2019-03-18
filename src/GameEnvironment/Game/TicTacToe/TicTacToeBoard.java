@@ -115,7 +115,7 @@ class TicTacToeBoard extends Board {
 				if (super.getGridPieces()[row][col] == null)
 					++emptyCells;
 		
-		return emptyCells;
+		return (emptyCells == 0) ? 1 : emptyCells;
 	}
 	
 	/* Determine if game ended in a tie; no more empty cells without a winner 

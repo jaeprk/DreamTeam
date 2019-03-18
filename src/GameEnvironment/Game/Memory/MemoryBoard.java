@@ -15,14 +15,13 @@ import javafx.util.Pair;
 class MemoryBoard extends Board 
 {
 	private MemoryPiece[][] gridPieces; //matrix for holding randomized pieces
-	Pair<Integer, Integer> lastp1Coord;
-	Pair<Integer, Integer> lastp2Coord;
+	private Pair<Integer, Integer> lastp1Coord;
+	private Pair<Integer, Integer> lastp2Coord;
 	
-	int p1score = 0;
-	int p2score = 0;
-	boolean firstSelection;
-	boolean tied;
-	boolean matched = true;;
+	private int p1score = 0;
+	private int p2score = 0;
+	private boolean firstSelection;
+	private boolean matched = true;
 	
 	protected MemoryBoard(int rows, int cols, int maxPlayer, Interaction interaction, Piece currentPiece) 
 	{		

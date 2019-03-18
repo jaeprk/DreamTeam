@@ -44,6 +44,5 @@ public abstract class Piece {
 		if (player > 0 && player <= Board.maxPlayer)
 			return player;
 		return 1;	
-	}
-	
+	}	
 }

@@ -27,11 +27,8 @@ public class CheckersBoard extends Board{
 			if (i != 3 && i != 4) {
 				for(int j=0; j < getCols(); ++j) {
 					CheckersPiece piece = new CheckersPiece(i<3?"black":"red",i<3?2:1);
-					if(i%2 == 0 && j%2 == 0)
+					if((i%2 == 0 && j%2 == 0) || (i%2 != 0 && j%2 != 0))
 						this.updateGrid(i, j, piece);
-					if(i%2 != 0 && j%2 != 0) {
-						this.updateGrid(i, j, piece);
-					}
 				}
 			}
 		}
@@ -43,15 +40,33 @@ public class CheckersBoard extends Board{
 		// TODO Auto-generated method stub
 		//end game rules.
 		//check score
-		return false;
+		
+		boolean tmp[] = new boolean[] {true, true};
+		for(int x = 0; x < getRows(); x++) {
+			for(int y = 0; y < getCols(); y++) {
+				Piece p = getGridPieces()[x][y];
+				if (p != null)
+					tmp[p.playerNumber() - 1] = false;	
+			}
+		}
+		return tmp[0] || tmp[1];
 	}
 
 	@Override
 	protected int calculateScore() {
-		return currentPlayer;
 		// TODO Auto-generated method stub
 		//+ one for every piece taken?
 		
+		int tmp = 0;
+		for(int x = 0; x < getRows(); x++) {
+			for(int y = 0; y < getCols(); y++) {
+				Piece p = getGridPieces()[x][y];
+				if (p != null) {
+					tmp += p.playerNumber() > 1 ? 1 : -1;
+				}			
+			}
+		}
+		return Math.abs(tmp);
 	}
 	
 	@Override
